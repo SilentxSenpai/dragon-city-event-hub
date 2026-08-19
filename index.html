@@ -21,6 +21,8 @@
   body { background: var(--bg-dark); color: #fff; padding-bottom: 50px; }
 
   header { padding: 18px 7%; display: flex; justify-content: space-between; align-items: center; background: #120c20; border-bottom: 1px solid #33234d; position: sticky; top: 0; z-index: 100; }
+  .logo-header-group { display: flex; align-items: center; gap: 12px; }
+  .alliance-logo-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
   .logo-container { display: flex; flex-direction: column; }
   .logo { font-size: 22px; font-weight: 800; } .logo span { color: var(--accent); }
   .author-credit { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: -2px; }
@@ -63,9 +65,27 @@
 <body>
 
 <header>
-  <div class="logo-container">
-    <div class="logo">🏰 The Fool's <span>Abode</span></div>
-    <div class="author-credit">Created by silentxsenpai</div>
+  <div class="logo-header-group">
+    <!-- SVG matching the dark blue/cyan circular emblem with crescent swoosh -->
+    <svg class="alliance-logo-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#00d2ff"/>
+          <stop offset="50%" stop-color="#003b6d"/>
+          <stop offset="100%" stop-color="#030b1e"/>
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="50" fill="url(#bgGlow)"/>
+      <!-- Glowing inner swirl elements -->
+      <path d="M 25 55 C 20 25, 60 15, 78 35 C 60 25, 30 35, 32 60 C 33 72, 50 80, 65 75 C 40 85, 20 70, 25 55 Z" fill="#00e5ff" opacity="0.9"/>
+      <path d="M 40 45 C 35 30, 65 20, 82 40 C 68 32, 45 40, 48 58 C 43 52, 38 50, 40 45 Z" fill="#ffffff" opacity="0.95"/>
+      <circle cx="72" cy="38" r="4" fill="#ffffff"/>
+      <circle cx="28" cy="62" r="2.5" fill="#00e5ff"/>
+    </svg>
+    <div class="logo-container">
+      <div class="logo">The Fool's <span>Abode</span></div>
+      <div class="author-credit">Created by silentxsenpai</div>
+    </div>
   </div>
   <nav>
     <button class="nav-btn active" onclick="switchTab(event, 'chests')">Alliance Chests</button>
@@ -163,7 +183,7 @@
 
   <!-- TAB 2: MAZE EVENT CALCULATOR -->
   <section id="maze" class="tab-content">
-    <h2>🗺️ Maze Island Path & Cost Calculator (Aug 13 - 24)</h2>
+    <h2>🗺️ Maze Island Path & Full Cost Breakdown (Aug 13 - 24)</h2>
     <div class="info-banner" style="margin-top: 15px;">
       <div class="info-stat">Start Bonus: <b>700 Coins</b></div>
       <div class="info-stat">Daily Collections (11 Days): <b>22,000 Coins</b></div>
@@ -201,6 +221,97 @@
           <p style="margin-top: 4px;">Coins Still Needed: <b id="outNeeded" style="color:#ff5252;">0 Coins</b></p>
         </div>
       </div>
+    </div>
+
+    <!-- Complete Breakdown Table Restored -->
+    <h3 style="margin-top: 30px;">📊 Complete Maze Island Path Breakdown</h3>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Dragon Name</th>
+            <th>Rarity</th>
+            <th>Path Cost</th>
+            <th>Prerequisites / Keys Required</th>
+            <th>Total Cost</th>
+            <th>F2P Achievable?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Luminescent Dragon</b></td>
+            <td>Rare (#64)</td>
+            <td>750</td>
+            <td>None</td>
+            <td>750</td>
+            <td><span class="badge badge-live">Yes</span></td>
+          </tr>
+          <tr>
+            <td><b>Loki Dragon</b></td>
+            <td>Very Rare (#197)</td>
+            <td>2,585</td>
+            <td>Luminescent Key (380)</td>
+            <td>2,965</td>
+            <td><span class="badge badge-live">Yes</span></td>
+          </tr>
+          <tr>
+            <td><b>Sad Dragon</b></td>
+            <td>Very Rare (#337)</td>
+            <td>2,605</td>
+            <td>Loki Key (1,600)</td>
+            <td>4,205</td>
+            <td><span class="badge badge-live">Yes</span></td>
+          </tr>
+          <tr>
+            <td><b>Mountain Ogre Dragon</b></td>
+            <td>Epic (#1414)</td>
+            <td>3,800</td>
+            <td>Sad Key (3,950)</td>
+            <td>7,750</td>
+            <td><span class="badge badge-live">Yes</span></td>
+          </tr>
+          <tr>
+            <td><b>Zombie Nature Dragon</b></td>
+            <td>Epic (#1187)</td>
+            <td>4,035</td>
+            <td>Mountain Ogre Key (4,530)</td>
+            <td>8,565</td>
+            <td><span class="badge badge-live">Yes</span></td>
+          </tr>
+          <tr>
+            <td><b>Native Dragon</b></td>
+            <td>Epic (#1161)</td>
+            <td>6,525</td>
+            <td>Zombie Nature Key (7,120)</td>
+            <td>13,645</td>
+            <td><span class="badge badge-live">Yes</span></td>
+          </tr>
+          <tr>
+            <td><b>Chichen Itza Dragon</b></td>
+            <td>Epic (#1179)</td>
+            <td>6,700</td>
+            <td>Native Key (9,005)</td>
+            <td>15,705</td>
+            <td><span class="badge badge-live">Yes</span></td>
+          </tr>
+          <tr>
+            <td><b>Bandaged Dragon</b></td>
+            <td>Legendary (#2158)</td>
+            <td>10,440</td>
+            <td>Chichen Itza Key (14,530)</td>
+            <td>24,970</td>
+            <td><span class="badge badge-skip">P2W / Extra Coins Needed</span></td>
+          </tr>
+          <tr>
+            <td><b>Spring Sniper Dragon</b></td>
+            <td>Legendary (#2199)</td>
+            <td>28,900</td>
+            <td>None (Direct Path)</td>
+            <td>28,900</td>
+            <td><span class="badge badge-skip">P2W / Extra Coins Needed</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
