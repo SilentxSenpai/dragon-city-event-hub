@@ -97,6 +97,7 @@
         <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Duration: 3 Days (8-18-26)</p>
         <div class="result-card" style="margin-top: 15px;">
           <p>Minimum Required: <b style="color:var(--gold);">13k points</b></p>
+          <p style="margin-top:4px;">Reward: <b style="color:var(--accent);">Food</b></p>
         </div>
       </div>
 
@@ -107,11 +108,11 @@
           <div class="form-group">
             <label>1. Select Chest Event:</label>
             <select id="pingChestSelect" onchange="updateMessagePreview()">
-              <option value="Hatch Chest 🥚|3 Days|13k|Gems|2026-08-18T12:00:00">Hatch Chest 🥚 (3 Days) — 13k Min</option>
-              <option value="League Chest 🏆|2 Days|8k|Gems|2026-08-25T12:00:00">League Chest 🏆 (2 Days) — 8k Min</option>
-              <option value="Arena Chest ⚔️|3 Days|10k|Food|2026-08-28T12:00:00" selected>Arena Chest ⚔️ (3 Days) — 10k Min</option>
-              <option value="Hatch Chest 🥚|2 Days|8.75k|Gems|2026-09-05T12:00:00">Hatch Chest 🥚 (2 Days) — 8.75k Min</option>
-              <option value="Arena Chest ⚔️|2 Days|7.1k|Food|2026-09-08T12:00:00">Arena Chest ⚔️ (2 Days) — 7.1k Min</option>
+              <option value="Hatch Chest 🥚|3 Days|13k|Food|2026-08-18T12:00:00">Hatch Chest 🥚 (3 Days) — 13k Min (Food)</option>
+              <option value="League Chest 🏆|2 Days|8k|Food|2026-08-25T12:00:00">League Chest 🏆 (2 Days) — 8k Min (Food)</option>
+              <option value="Arena Chest ⚔️|3 Days|10k|Gems|2026-08-28T12:00:00" selected>Arena Chest ⚔️ (3 Days) — 10k Min (Gems)</option>
+              <option value="Hatch Chest 🥚|2 Days|8.75k|Food|2026-09-05T12:00:00">Hatch Chest 🥚 (2 Days) — 8.75k Min (Food)</option>
+              <option value="Arena Chest ⚔️|2 Days|7.1k|Gems|2026-09-08T12:00:00">Arena Chest ⚔️ (2 Days) — 7.1k Min (Gems)</option>
             </select>
           </div>
 
@@ -152,18 +153,19 @@
             <th>Duration</th>
             <th>Start Date</th>
             <th>Minimum Target</th>
+            <th>Reward</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>🥚 Hatch</td><td>3 Day</td><td>8-18-26</td><td>13k minimum</td><td><span class="badge badge-live">Active</span></td></tr>
-          <tr><td>🥚 L Breed</td><td>2 Day</td><td>8-22-26</td><td>SKIP</td><td><span class="badge badge-skip">SKIP</span></td></tr>
-          <tr><td>🏆 League</td><td>2 Day</td><td>8-25-26</td><td>8k minimum</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
-          <tr><td>⚔️ Arena</td><td>3 Day</td><td>8-28-26</td><td>10k minimum</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
-          <tr><td>🥚 E Breed</td><td>3 Day</td><td>9-01-26</td><td>SKIP</td><td><span class="badge badge-skip">SKIP</span></td></tr>
-          <tr><td>🥚 Hatch</td><td>2 Day</td><td>9-05-26</td><td>8.75k minimum</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
-          <tr><td>⚔️ Arena</td><td>2 Day</td><td>9-08-26</td><td>7.1k minimum</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
-          <tr><td>🥚 L Breed</td><td>3 Day</td><td>9-11-26</td><td>SKIP</td><td><span class="badge badge-skip">SKIP</span></td></tr>
+          <tr><td>🥚 Hatch</td><td>3 Day</td><td>8-18-26</td><td>13k minimum</td><td>Food</td><td><span class="badge badge-live">Active</span></td></tr>
+          <tr><td>🥚 L Breed</td><td>2 Day</td><td>8-22-26</td><td>SKIP</td><td>—</td><td><span class="badge badge-skip">SKIP</span></td></tr>
+          <tr><td>🏆 League</td><td>2 Day</td><td>8-25-26</td><td>8k minimum</td><td>Food</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
+          <tr><td>⚔️ Arena</td><td>3 Day</td><td>8-28-26</td><td>10k minimum</td><td>Gems</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
+          <tr><td>🥚 E Breed</td><td>3 Day</td><td>9-01-26</td><td>SKIP</td><td>—</td><td><span class="badge badge-skip">SKIP</span></td></tr>
+          <tr><td>🥚 Hatch</td><td>2 Day</td><td>9-05-26</td><td>8.75k minimum</td><td>Food</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
+          <tr><td>⚔️ Arena</td><td>2 Day</td><td>9-08-26</td><td>7.1k minimum</td><td>Gems</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
+          <tr><td>🥚 L Breed</td><td>3 Day</td><td>9-11-26</td><td>SKIP</td><td>—</td><td><span class="badge badge-skip">SKIP</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -217,15 +219,16 @@
       <div class="tool-box">
         <div class="form-group">
           <label>Starting Level:</label>
-          <input type="number" id="startLevel" value="1" min="1" max="69">
+          <input type="number" id="startLevel" value="1" min="1" max="69" oninput="calculateFood()">
         </div>
         <div class="form-group">
-          <label>Target Level:</label>
-          <input type="number" id="targetLevel" value="40" min="2" max="70">
+          <label>Target Level (Max Level: 70):</label>
+          <input type="number" id="targetLevel" value="70" min="2" max="70" oninput="calculateFood()">
         </div>
         <button style="width:100%; padding: 10px; background: var(--accent); border:none; border-radius: 8px; color:#fff; font-weight:bold; cursor:pointer;" onclick="calculateFood()">Calculate Food Cost</button>
-        <div id="foodResultBox" class="result-card" style="display:none; margin-top:15px;">
-          <p>Total Food Required: <b id="totalFoodVal" style="color:var(--accent);">0</b></p>
+        <div id="foodResultBox" class="result-card" style="margin-top:15px;">
+          <p>Total Food Required: <b id="totalFoodVal" style="color:var(--accent);">112,950,000 Food</b></p>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Level 1 → 70 requires 112.95M food in total.</p>
         </div>
       </div>
     </div>
@@ -255,23 +258,34 @@ function calculateMaze() {
   document.getElementById('outNeeded').textContent = remaining.toLocaleString() + " Coins";
 }
 
-function calculateFood() {
-  const start = parseInt(document.getElementById('startLevel').value);
-  const target = parseInt(document.getElementById('targetLevel').value);
+// Accurate Food Cost Array capped at 70 (Total Level 1 -> 70 = 112,950,000)
+const cumulativeFood = [
+  0, 0, 30, 90, 210, 450, 930, 1890, 3810, 7650, 15330, 
+  25330, 38830, 56830, 80330, 110830, 149830, 198830, 259830, 334830, 425830, 
+  535830, 667830, 824830, 1009830, 1225830, 1475830, 1762830, 2090830, 2463830, 2885830, 
+  3360830, 3892830, 4485830, 5143830, 5870830, 6670830, 7547830, 8505830, 9548830, 10680830, 
+  12180830, 13980830, 16180830, 18880830, 22180830, 26180830, 31080830, 37080830, 44480830, 53480830, 
+  62480830, 71480830, 80480830, 89480830, 95480830, 99480830, 102480830, 104880830, 106880830, 108480830, 
+  109780830, 110780830, 111530830, 112080830, 112480830, 112730830, 112880830, 112930830, 112950830
+];
 
+function calculateFood() {
+  let start = parseInt(document.getElementById('startLevel').value) || 1;
+  let target = parseInt(document.getElementById('targetLevel').value) || 70;
+
+  if (start < 1) start = 1;
+  if (target > 70) target = 70;
   if (start >= target) {
-    alert("Target level must be greater than current level.");
+    document.getElementById('totalFoodVal').textContent = "0 Food";
     return;
   }
 
-  let totalFood = 0;
-  for (let lvl = start; lvl < target; lvl++) {
-    if (lvl < 10) totalFood += Math.pow(lvl, 2) * 15;
-    else if (lvl < 40) totalFood += Math.pow(lvl, 2.8) * 8;
-    else totalFood += Math.pow(lvl, 3.1) * 6;
-  }
+  const startIdx = Math.min(start - 1, cumulativeFood.length - 1);
+  const targetIdx = Math.min(target - 1, cumulativeFood.length - 1);
+  
+  const totalFood = cumulativeFood[targetIdx] - cumulativeFood[startIdx];
 
-  document.getElementById('totalFoodVal').textContent = Math.round(totalFood).toLocaleString() + " Food";
+  document.getElementById('totalFoodVal').textContent = totalFood.toLocaleString() + " Food";
   document.getElementById('foodResultBox').style.display = 'block';
 }
 
@@ -372,6 +386,7 @@ function checkAndAutoPing() {
 }
 
 calculateMaze();
+calculateFood();
 updateMessagePreview();
 </script>
 
