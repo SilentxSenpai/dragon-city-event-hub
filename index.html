@@ -48,8 +48,8 @@
   /* Inputs */
   .form-group { margin-bottom: 15px; }
   label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 14px; }
-  input, select { width: 100%; padding: 10px 12px; border-radius: 8px; background: #0d0914; color: #fff; border: 1px solid var(--border); outline: none; font-size: 14px; }
-  input:focus, select:focus { border-color: var(--accent); }
+  input, select, textarea { width: 100%; padding: 10px 12px; border-radius: 8px; background: #0d0914; color: #fff; border: 1px solid var(--border); outline: none; font-size: 14px; }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   
   /* Item Legend Tags */
   .legend-box { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
@@ -74,7 +74,7 @@
   .result-card { background: #0d0914; border-left: 4px solid var(--accent); padding: 12px; margin-top: 15px; border-radius: 4px; }
 
   /* Discord Alert Section */
-  .btn-discord { width: 100%; padding: 10px; background: var(--discord-color); border: none; border-radius: 8px; color: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+  .btn-discord { width: 100%; padding: 12px; background: var(--discord-color); border: none; border-radius: 8px; color: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
   .btn-discord:hover { background: #4752c4; }
 </style>
 </head>
@@ -93,9 +93,9 @@
 
   <!-- TAB 1: ALLIANCE CHESTS & DISCORD PINGER -->
   <section id="chests" class="tab-content active">
-    <h2>🏆 Alliance Chest Schedule</h2>
+    <h2>🏆 Alliance Chest Schedule & Discord Pinger</h2>
     <p style="color: var(--text-muted); margin-top: 4px; font-size: 14px;">
-      The Fools Abode x Rebirth alliance schedule and target minimum scores[span_0](start_span)[span_0](end_span).
+      Send clean, simple text announcements directly to your Discord channel.
     </p>
 
     <div class="grid">
@@ -109,29 +109,45 @@
         </div>
       </div>
 
-      <div class="tool-box">
-        <span class="badge badge-timed">Next Up</span>
-        <h3>⚔️ Upcoming Arena Chests</h3>
-        <div style="font-size: 13px; color: var(--text-muted); margin-top: 10px; line-height: 1.8;">
-          <p><b>Aug 28 – Aug 31 (3 Day):</b> Arena Chest — <b style="color:var(--gold);">10k min</b></p>
-          <p><b>Sep 08 – Sep 10 (2 Day):</b> Arena Chest — <b style="color:var(--gold);">7.1k min</b></p>
-        </div>
-      </div>
-
       <!-- Discord Webhook Pinger Box -->
-      <div class="tool-box">
-        <h3>🔔 Discord Alliance Pinger</h3>
-        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Send instant alerts to your Discord alliance channel.</p>
+      <div class="tool-box" style="grid-column: span 2;">
+        <h3>🔔 Simple Discord Pinger</h3>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Select a chest event to automatically build your clean text ping.</p>
         
-        <div class="form-group" style="margin-top: 10px;">
-          <label>Webhook URL:</label>
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 0;">
+          <div class="form-group">
+            <label>1. Select Chest Event:</label>
+            <select id="pingChestSelect" onchange="updateMessagePreview()">
+              <option value="Hatch Chest 🥚|3 Days|13k|Gems|Begins today within 5 and a half hours !">Hatch Chest (3 Days) — 13k Min</option>
+              <option value="League Chest 🏆|2 Days|8k|Gems|Begins Aug 25!">League Chest (2 Days) — 8k Min</option>
+              <option value="Arena Chest ⚔️|3 Days|10k|Food|Begins Aug 28!" selected>Arena Chest (3 Days) — 10k Min</option>
+              <option value="Hatch Chest 🥚|2 Days|8.75k|Gems|Begins Sep 5!">Hatch Chest (2 Days) — 8.75k Min</option>
+              <option value="Arena Chest ⚔️|2 Days|7.1k|Food|Begins Sep 8!">Arena Chest (2 Days) — 7.1k Min</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>2. Role ID / Mention Tag:</label>
+            <input type="text" id="pingTag" value="<@&1528588394379350037>" placeholder="<@&ROLE_ID> or @everyone" oninput="updateMessagePreview()">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>3. Time / Start Status Note:</label>
+          <input type="text" id="pingStatus" value="Begins today!" placeholder="e.g. Begins in 2 hours!" oninput="updateMessagePreview()">
+        </div>
+
+        <div class="form-group">
+          <label>Message Preview:</label>
+          <div id="msgPreview" style="background: #0d0914; border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 13px; white-space: pre-wrap; color: #a970ff;"></div>
+        </div>
+
+        <div class="form-group">
+          <label>4. Discord Webhook URL:</label>
           <input type="text" id="webhookUrl" placeholder="https://discord.com/api/webhooks/...">
         </div>
-        <div class="form-group">
-          <label>Alert Message / Ping Role:</label>
-          <input type="text" id="pingMessage" value="🚨 Alliance Chest Alert: New Arena Chest starting soon! Target: 10k points minimum!">
-        </div>
-        <button class="btn-discord" onclick="sendDiscordPing()">Send Discord Ping</button>
+
+        <button class="btn-discord" onclick="sendDiscordPing()">🚀 Send Simple Ping to Discord</button>
       </div>
     </div>
 
@@ -166,7 +182,7 @@
   <section id="maze" class="tab-content">
     <h2>🗺️ Maze Island Path & Cost Calculator (Aug 13 - 24)</h2>
     <p style="color: var(--text-muted); margin-top: 4px; font-size: 14px;">
-      Path costs belong to path positions and colors, not specific dragons. Special items appear in identical spots across paths.
+      Path costs belong to path positions and colors, not specific dragons.
     </p>
 
     <!-- Start & Free Coin Summary -->
@@ -232,43 +248,10 @@
           <p><b>Aug 14–16:</b> Dark Angel (2,590 coins)</p>
           <p><b>Aug 17–19:</b> Two-Headed (7,850 coins)</p>
           <p><b>Aug 19–21:</b> Plagued Pal (5,300 coins)</p>
-          <p><b>Aug 22–23:</b> Abracadabra (21,400 coins) • <span style="color:var(--gold);">Redemption Doom Available</span></p>
+          <p><b>Aug 22–23:</b> Abracadabra (21,400 coins)</p>
           <p><b>Aug 23–24:</b> Estival (9,895 coins)</p>
         </div>
       </div>
-    </div>
-
-    <!-- Full Data Table -->
-    <h3 style="margin-top: 30px;">📋 Complete Maze Path Breakdown</h3>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Dragon Name</th>
-            <th>Rarity & ID</th>
-            <th>Type</th>
-            <th>Path Cost</th>
-            <th>Key Cost</th>
-            <th>Total Cost</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Spring Sniper</td><td>L #2199</td><td><span class="badge badge-live">Open</span></td><td>28,900</td><td>0</td><td>28,900</td></tr>
-          <tr><td>Luminescent</td><td>R #64</td><td><span class="badge badge-live">Open</span></td><td>750</td><td>380</td><td>750</td></tr>
-          <tr><td>Loki</td><td>VR #197</td><td><span class="badge badge-live">1 Key</span></td><td>2,585</td><td>1,970</td><td>2,965</td></tr>
-          <tr><td>Sad</td><td>VR #337</td><td><span class="badge badge-live">2 Keys</span></td><td>2,605</td><td>1,600</td><td>4,955</td></tr>
-          <tr><td>Mountain Ogre</td><td>E #1414</td><td><span class="badge badge-live">3 Keys</span></td><td>3,800</td><td>580</td><td>7,750</td></tr>
-          <tr><td>Zombie Nature</td><td>E #1187</td><td><span class="badge badge-live">4 Keys</span></td><td>4,035</td><td>2,590</td><td>8,565</td></tr>
-          <tr><td>Native</td><td>E #1161</td><td><span class="badge badge-live">5 Keys</span></td><td>6,525</td><td>1,885</td><td>13,645</td></tr>
-          <tr><td>Chichen Itza</td><td>E #1179</td><td><span class="badge badge-live">6 Keys</span></td><td>6,700</td><td>5,525</td><td>15,705</td></tr>
-          <tr><td>Bandaged</td><td>L #2158</td><td><span class="badge badge-live">7 Keys</span></td><td>10,440</td><td>0</td><td>24,970</td></tr>
-          <tr><td>Dark Angel</td><td>E #343</td><td><span class="badge badge-timed">Aug 14-16</span></td><td>2,590</td><td>0</td><td>2,590</td></tr>
-          <tr><td>Two-Headed</td><td>R #134</td><td><span class="badge badge-timed">Aug 17-19</span></td><td>7,850</td><td>0</td><td>7,850</td></tr>
-          <tr><td>Plagued Pal</td><td>L #2151</td><td><span class="badge badge-timed">Aug 19-21</span></td><td>5,300</td><td>0</td><td>5,300</td></tr>
-          <tr><td>Abracadabra</td><td>L #1871</td><td><span class="badge badge-timed">Aug 22-23</span></td><td>21,400</td><td>0</td><td>21,400</td></tr>
-          <tr><td>Estival</td><td>L #1857</td><td><span class="badge badge-timed">Aug 23-24</span></td><td>9,895</td><td>0</td><td>9,895</td></tr>
-        </tbody>
-      </table>
     </div>
   </section>
 
@@ -337,32 +320,50 @@ function calculateFood() {
   document.getElementById('foodResultBox').style.display = 'block';
 }
 
-// --- DISCORD WEBHOOK PINGER ---
+function generateMessage() {
+  const selectedData = document.getElementById('pingChestSelect').value.split('|');
+  const tag = document.getElementById('pingTag').value.trim();
+  const status = document.getElementById('pingStatus').value.trim();
+
+  const name = selectedData[0];
+  const duration = selectedData[1];
+  const minPts = selectedData[2];
+  const reward = selectedData[3];
+
+  return `${tag}\n**[${name}]** ${status}\n\nDuration: ${duration}\nMin pts: ${minPts}\nReward: ${reward}`;
+}
+
+function updateMessagePreview() {
+  document.getElementById('msgPreview').textContent = generateMessage();
+}
+
 function sendDiscordPing() {
   const url = document.getElementById('webhookUrl').value.trim();
-  const msg = document.getElementById('pingMessage').value.trim();
 
   if (!url) {
     alert("Please enter a valid Discord Webhook URL.");
     return;
   }
 
+  const messageText = generateMessage();
+
   fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content: msg })
+    body: JSON.stringify({ content: messageText })
   })
   .then(res => {
     if (res.ok) alert("Discord ping sent successfully!");
-    else alert("Failed to send message. Please check the Webhook URL.");
+    else alert("Failed to send message. Please check your Webhook URL.");
   })
   .catch(err => {
     alert("Error sending request: " + err);
   });
 }
 
-// Initial calculation call
+// Initial calls
 calculateMaze();
+updateMessagePreview();
 </script>
 
 </body>
