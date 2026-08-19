@@ -1,4 +1,4 @@
-
+<file name="index.html">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,6 +76,8 @@
   /* Discord Alert Section */
   .btn-discord { width: 100%; padding: 12px; background: var(--discord-color); border: none; border-radius: 8px; color: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
   .btn-discord:hover { background: #4752c4; }
+  .btn-auto { background: #2e7d32; }
+  .btn-auto:hover { background: #1b5e20; }
 </style>
 </head>
 <body>
@@ -93,9 +95,9 @@
 
   <!-- TAB 1: ALLIANCE CHESTS & DISCORD PINGER -->
   <section id="chests" class="tab-content active">
-    <h2>🏆 Alliance Chest Schedule & Discord Pinger</h2>
+    <h2>🏆 Alliance Chest Schedule & Auto Pinger</h2>
     <p style="color: var(--text-muted); margin-top: 4px; font-size: 14px;">
-      Send clean, simple text announcements directly to your Discord channel.
+      Automatic and manual Discord pings formatted to your exact requirements.
     </p>
 
     <div class="grid">
@@ -111,34 +113,33 @@
 
       <!-- Discord Webhook Pinger Box -->
       <div class="tool-box" style="grid-column: span 2;">
-        <h3>🔔 Simple Discord Pinger</h3>
-        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Select a chest event to automatically build your clean text ping.</p>
+        <h3>🔔 Discord Alliance Pinger</h3>
         
         <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 0;">
           <div class="form-group">
             <label>1. Select Chest Event:</label>
             <select id="pingChestSelect" onchange="updateMessagePreview()">
-              <option value="Hatch Chest 🥚|3 Days|13k|Gems|Begins today within 5 and a half hours !">Hatch Chest (3 Days) — 13k Min</option>
-              <option value="League Chest 🏆|2 Days|8k|Gems|Begins Aug 25!">League Chest (2 Days) — 8k Min</option>
-              <option value="Arena Chest ⚔️|3 Days|10k|Food|Begins Aug 28!" selected>Arena Chest (3 Days) — 10k Min</option>
-              <option value="Hatch Chest 🥚|2 Days|8.75k|Gems|Begins Sep 5!">Hatch Chest (2 Days) — 8.75k Min</option>
-              <option value="Arena Chest ⚔️|2 Days|7.1k|Food|Begins Sep 8!">Arena Chest (2 Days) — 7.1k Min</option>
+              <option value="Hatch Chest 🥚|3 Days|13k|Gems|2026-08-18T12:00:00">🥚 Hatch Chest (3 Days) — 13k Min</option>
+              <option value="League Chest 🏆|2 Days|8k|Gems|2026-08-25T12:00:00">🏆 League Chest (2 Days) — 8k Min</option>
+              <option value="Arena Chest ⚔️|3 Days|10k|Food|2026-08-28T12:00:00" selected>⚔️ Arena Chest (3 Days) — 10k Min</option>
+              <option value="Hatch Chest 🥚|2 Days|8.75k|Gems|2026-09-05T12:00:00">🥚 Hatch Chest (2 Days) — 8.75k Min</option>
+              <option value="Arena Chest ⚔️|2 Days|7.1k|Food|2026-09-08T12:00:00">⚔️ Arena Chest (2 Days) — 7.1k Min</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label>2. Role ID / Mention Tag:</label>
-            <input type="text" id="pingTag" value="<@&1528588394379350037>" placeholder="<@&ROLE_ID> or @everyone" oninput="updateMessagePreview()">
+            <label>2. Role Tag / Ping:</label>
+            <input type="text" id="pingTag" value="<@&1528588394379350037>" placeholder="<@&ROLE_ID>" oninput="updateMessagePreview()">
           </div>
         </div>
 
         <div class="form-group">
-          <label>3. Time / Start Status Note:</label>
-          <input type="text" id="pingStatus" value="Begins today!" placeholder="e.g. Begins in 2 hours!" oninput="updateMessagePreview()">
+          <label>3. Custom Status / Timing Line:</label>
+          <input type="text" id="pingStatus" value="Begins Now" placeholder="e.g. Begins Now" oninput="updateMessagePreview()">
         </div>
 
         <div class="form-group">
-          <label>Message Preview:</label>
+          <label>Exact Output Message Preview:</label>
           <div id="msgPreview" style="background: #0d0914; border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 13px; white-space: pre-wrap; color: #a970ff;"></div>
         </div>
 
@@ -147,7 +148,9 @@
           <input type="text" id="webhookUrl" placeholder="https://discord.com/api/webhooks/...">
         </div>
 
-        <button class="btn-discord" onclick="sendDiscordPing()">🚀 Send Simple Ping to Discord</button>
+        <button class="btn-discord" onclick="sendDiscordPing()">🚀 Send Ping Now</button>
+        <button id="autoBtn" class="btn-discord btn-auto" onclick="toggleAutoScheduler()">⏰ Start Auto Scheduler (Keep Tab Open)</button>
+        <p id="autoStatus" style="font-size: 12px; color: var(--text-muted); margin-top: 8px; text-align: center;"></p>
       </div>
     </div>
 
@@ -330,7 +333,7 @@ function generateMessage() {
   const minPts = selectedData[2];
   const reward = selectedData[3];
 
-  return `${tag}\n**[${name}]** ${status}\n\nDuration: ${duration}\nMin pts: ${minPts}\nReward: ${reward}`;
+  return `${tag}\n**[The ${name}]** ${status}\n\nDuration: ${duration}\nMin pts: ${minPts}\nReward: ${reward}`;
 }
 
 function updateMessagePreview() {
@@ -359,6 +362,62 @@ function sendDiscordPing() {
   .catch(err => {
     alert("Error sending request: " + err);
   });
+}
+
+// Auto Scheduler Functionality
+let autoTimer = null;
+let triggeredEvents = {};
+
+function toggleAutoScheduler() {
+  const btn = document.getElementById('autoBtn');
+  const status = document.getElementById('autoStatus');
+  const url = document.getElementById('webhookUrl').value.trim();
+
+  if (!autoTimer) {
+    if (!url) {
+      alert("Please enter a Webhook URL before starting the scheduler.");
+      return;
+    }
+    autoTimer = setInterval(checkAndAutoPing, 60000); // Check every 1 minute
+    btn.textContent = "🛑 Stop Auto Scheduler";
+    btn.style.background = "#c62828";
+    status.textContent = "Auto Scheduler Running: Checking chest start times every minute...";
+    checkAndAutoPing();
+  } else {
+    clearInterval(autoTimer);
+    autoTimer = null;
+    btn.textContent = "⏰ Start Auto Scheduler (Keep Tab Open)";
+    btn.style.background = "#2e7d32";
+    status.textContent = "Auto Scheduler stopped.";
+  }
+}
+
+function checkAndAutoPing() {
+  const url = document.getElementById('webhookUrl').value.trim();
+  const select = document.getElementById('pingChestSelect');
+  const now = new Date();
+
+  for (let option of select.options) {
+    const parts = option.value.split('|');
+    const name = parts[0];
+    const duration = parts[1];
+    const minPts = parts[2];
+    const reward = parts[3];
+    const startTime = new Date(parts[4]);
+
+    // If event start time has arrived (within 5 minutes) and hasn't been auto-pinged yet
+    if (Math.abs(now - startTime) <= 300000 && !triggeredEvents[name]) {
+      triggeredEvents[name] = true;
+      const tag = document.getElementById('pingTag').value.trim();
+      const autoMsg = `${tag}\n**[The ${name}]** Begins Now\n\nDuration: ${duration}\nMin pts: ${minPts}\nReward: ${reward}`;
+
+      fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: autoMsg })
+      });
+    }
+  }
 }
 
 // Initial calls
