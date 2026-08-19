@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dragon City Event Hub</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#0b0715;color:#fff;line-height:1.5}
+header{padding:18px 7%;display:flex;justify-content:space-between;align-items:center;background:#120c20;border-bottom:1px solid #33234d;position:sticky;top:0;z-index:5}
+.logo{font-size:22px;font-weight:800}.logo span{color:#a970ff}
+nav a{color:#ddd;text-decoration:none;margin-left:20px;font-size:14px}
+.hero{padding:70px 7% 45px;background:radial-gradient(circle at 75% 20%,#5c2c9b55,transparent 35%),linear-gradient(135deg,#170c29,#0b0715)}
+.badge{display:inline-block;background:#8e4dff22;color:#cba9ff;padding:7px 12px;border-radius:20px;font-size:12px;margin-bottom:15px}
+h1{font-size:clamp(38px,7vw,68px);max-width:750px;line-height:1.02;margin-bottom:18px}
+.hero p{color:#bcb4c9;max-width:650px;font-size:17px}
+.container{padding:35px 7%;max-width:1250px;margin:auto}
+.section-title{font-size:27px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card{background:#151020;border:1px solid #2c213d;border-radius:18px;padding:20px;transition:.2s}
+.card:hover{transform:translateY(-3px);border-color:#8151b9}
+.icon{font-size:35px;margin-bottom:10px}.card h3{margin-bottom:6px}.muted{color:#9e96a9;font-size:13px}
+.timer{margin-top:16px;background:#0d0914;padding:12px;border-radius:12px;color:#d7b8ff;font-weight:700}
+.tag{display:inline-block;font-size:11px;padding:5px 9px;border-radius:10px;background:#25143a;color:#d4b6ff;margin-top:12px}
+footer{padding:30px 7%;border-top:1px solid #2a2037;color:#8f879a;text-align:center}
+@media(max-width:650px){nav{display:none}.hero{padding-top:45px}}
+
+.event-card{cursor:pointer;position:relative}
+.click-hint{margin-top:12px;color:#b88cff;font-size:12px;font-weight:700}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:20;padding:20px;align-items:center;justify-content:center}
+.modal.show{display:flex}
+.modal-box{background:#151020;border:1px solid #7045a1;border-radius:22px;max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:28px;box-shadow:0 20px 80px #000}
+.modal-close{float:right;border:0;background:#291b39;color:#fff;border-radius:50%;width:36px;height:36px;font-size:20px;cursor:pointer}
+.modal-icon{font-size:52px;margin-bottom:8px}.modal h2{font-size:30px;margin-bottom:6px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+.info{background:#0d0914;border-radius:12px;padding:12px}.info b{display:block;color:#b88cff;font-size:12px;margin-bottom:3px}
+.modal h3{margin:18px 0 7px}.modal p,.modal li{color:#bcb4c9}.modal ul{padding-left:20px}
+@media(max-width:500px){.info-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🐉 Dragon <span>City Hub</span></div>
+  <nav><a href="#events">Events</a><a href="#upcoming">Upcoming</a><a href="#guides">Guides</a></nav>
+</header>
+
+<section class="hero">
+  <span class="badge">COMMUNITY EVENT TRACKER</span>
+  <h1>Every Dragon City event in one place.</h1>
+  <p>Track live events, countdowns, upcoming events and community guides from one clean dashboard.</p>
+</section>
+
+<main>
+<section class="container" id="events">
+  <h2 class="section-title">🔥 Live & Featured Events</h2>
+  <div class="grid">
+    <article class="card event-card" onclick="openEvent('maze')">
+      <div class="icon">🗺️</div><h3>Long Maze Island</h3>
+      <p class="muted">Sparkler Collection • 13 Aug – 24 Aug</p>
+      <div class="timer" data-end="2026-08-24T21:30:00+05:30">Loading countdown...</div>
+      <span class="tag">LIVE</span>
+      <div class="click-hint">Tap for event info →</div>
+    </article>
+    <article class="card event-card" onclick="openEvent('crown')">
+      <div class="icon">👑</div><h3>Corrupted Crown Event</h3>
+      <p class="muted">Corrupted Crown event • 30 Jul – 10 Sep</p>
+      <div class="timer" data-end="2026-09-10T21:30:00+05:30">Loading countdown...</div>
+      <span class="tag">LIVE</span>
+      <div class="click-hint">Tap for event info →</div>
+    </article>
+    <article class="card event-card" onclick="openEvent('race')">
+      <div class="icon">🏃</div><h3>Mythical Race</h3>
+      <p class="muted">Featured Dragon: Gel Barrier • 20 Aug – 3 Sep</p>
+      <div class="timer" data-end="2026-09-03T21:30:00+05:30">Loading countdown...</div>
+      <span class="tag">LIVE</span>
+      <div class="click-hint">Tap for event info →</div>
+    </article>
+  </div>
+</section>
+
+<section class="container" id="upcoming">
+  <h2 class="section-title">📅 Upcoming</h2>
+  <div class="grid">
+    <article class="card"><div class="icon">🌫️</div><h3>Fog Island</h3><p class="muted">TruthBender Dragon • 24 Aug – 28 Aug</p></article>
+    <article class="card"><div class="icon">🧩</div><h3>Maze Island</h3><p class="muted">Sparkler Collection • 28 Aug – 3 Sep</p></article>
+    <article class="card"><div class="icon">🐉</div><h3>Seasonal Pet</h3><p class="muted">New Seasonal Pet • 20 Aug</p></article>
+  </div><h3>Puzzle Event</h3><p class="muted">Add the confirmed start date here.</p></article>
+    <article class="card"><div class="icon">🏃</div><h3>Runner Event</h3><p class="muted">Add the confirmed start date here.</p></article>
+    <article class="card"><div class="icon">🗺️</div><h3>Maze Event</h3><p class="muted">Add the confirmed start date here.</p></article>
+  </div>
+</section>
+
+<section class="container" id="guides">
+  <h2 class="section-title">📚 Event Guides</h2>
+  <div class="grid">
+    <article class="card"><div class="icon">💡</div><h3>Event Strategies</h3><p class="muted">Tips, milestones and resource planning.</p></article>
+    <article class="card"><div class="icon">🐲</div><h3>Dragon Database</h3><p class="muted">Build a searchable database of event dragons.</p></article>
+    <article class="card"><div class="icon">🎯</div><h3>Free Rewards</h3><p class="muted">Highlight rewards players can obtain without spending.</p></article>
+  </div>
+</section>
+</main>
+
+
+<div class="modal" id="eventModal" onclick="closeIfOutside(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeEvent()">×</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+<footer>Dragon City Event Hub • Community project<br><small>Event dates based on Dragon City’s official August 2026 event calendar. Events may change; check in-game news for the latest.</small></footer>
+
+
+<script>
+const eventInfo = {
+  maze: {
+    icon:"🗺️", title:"Long Maze Island",
+    dates:"13 Aug – 24 Aug 2026", type:"Maze Island",
+    dragon:"Event dragons vary by island",
+    description:"A Maze Island event where you collect event currency and spend it to move through paths and unlock rewards.",
+    rewards:["Dragons and event rewards along the maze paths","Event currency and milestone rewards","Final path rewards"],
+    tips:["Collect event currency whenever it is available.","Plan your path before spending currency.","Check the in-game event panel for the latest costs and rewards."]
+  },
+  crown: {
+    icon:"👑", title:"Corrupted Crown Event",
+    dates:"30 Jul – 10 Sep 2026", type:"Collection / seasonal event",
+    dragon:"Corrupted-themed rewards",
+    description:"A long-running seasonal event featuring Corrupted content and rewards.",
+    rewards:["Corrupted-themed dragons/rewards","Event collection rewards","Milestone prizes"],
+    tips:["Check daily event tasks.","Save useful resources for important milestones.","Always verify the current reward track in-game."]
+  },
+  race: {
+    icon:"🏃", title:"Mythical Race",
+    dates:"20 Aug – 3 Sep 2026", type:"Race event",
+    dragon:"Gel Barrier Dragon",
+    description:"Compete through race laps by completing tasks and collecting the required race items.",
+    rewards:["Gel Barrier Dragon","Race lap rewards","Milestone prizes"],
+    tips:["Complete tasks regularly instead of waiting until the end.","Watch your lap progress.","Coordinate your resource usage around important milestones."]
+  }
+};
+
+function openEvent(id){
+  const e=eventInfo[id];
+  document.getElementById("modalContent").innerHTML=`
+    <div class="modal-icon">${e.icon}</div>
+    <h2>${e.title}</h2>
+    <p>${e.description}</p>
+    <div class="info-grid">
+      <div class="info"><b>DATES</b>${e.dates}</div>
+      <div class="info"><b>TYPE</b>${e.type}</div>
+      <div class="info"><b>FEATURED</b>${e.dragon}</div>
+      <div class="info"><b>STATUS</b>Check countdown above</div>
+    </div>
+    <h3>🎁 Rewards</h3>
+    <ul>${e.rewards.map(x=>`<li>${x}</li>`).join("")}</ul>
+    <h3>💡 Tips</h3>
+    <ul>${e.tips.map(x=>`<li>${x}</li>`).join("")}</ul>
+  `;
+  document.getElementById("eventModal").classList.add("show");
+  document.body.style.overflow="hidden";
+}
+function closeEvent(){
+  document.getElementById("eventModal").classList.remove("show");
+  document.body.style.overflow="";
+}
+function closeIfOutside(e){
+  if(e.target.id==="eventModal") closeEvent();
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEvent()});
+</script>
+
+<script>
+function updateTimers(){
+ document.querySelectorAll('.timer').forEach(el=>{
+   const end=new Date(el.dataset.end).getTime(), now=Date.now(), diff=end-now;
+   if(diff<=0){el.textContent="Event ended";return}
+   const d=Math.floor(diff/86400000), h=Math.floor(diff/3600000)%24,
+         m=Math.floor(diff/60000)%60, s=Math.floor(diff/1000)%60;
+   el.textContent=`${d}d ${h}h ${m}m ${s}s`;
+ });
+}
+updateTimers(); setInterval(updateTimers,1000);
+</script>
+</body>
+</html>
