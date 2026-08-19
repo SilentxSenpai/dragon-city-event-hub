@@ -1,184 +1,370 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dragon City Event Hub</title>
+<title>Dragon City Hub - Alliance & Event Tracker</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#0b0715;color:#fff;line-height:1.5}
-header{padding:18px 7%;display:flex;justify-content:space-between;align-items:center;background:#120c20;border-bottom:1px solid #33234d;position:sticky;top:0;z-index:5}
-.logo{font-size:22px;font-weight:800}.logo span{color:#a970ff}
-nav a{color:#ddd;text-decoration:none;margin-left:20px;font-size:14px}
-.hero{padding:70px 7% 45px;background:radial-gradient(circle at 75% 20%,#5c2c9b55,transparent 35%),linear-gradient(135deg,#170c29,#0b0715)}
-.badge{display:inline-block;background:#8e4dff22;color:#cba9ff;padding:7px 12px;border-radius:20px;font-size:12px;margin-bottom:15px}
-h1{font-size:clamp(38px,7vw,68px);max-width:750px;line-height:1.02;margin-bottom:18px}
-.hero p{color:#bcb4c9;max-width:650px;font-size:17px}
-.container{padding:35px 7%;max-width:1250px;margin:auto}
-.section-title{font-size:27px;margin-bottom:18px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.card{background:#151020;border:1px solid #2c213d;border-radius:18px;padding:20px;transition:.2s}
-.card:hover{transform:translateY(-3px);border-color:#8151b9}
-.icon{font-size:35px;margin-bottom:10px}.card h3{margin-bottom:6px}.muted{color:#9e96a9;font-size:13px}
-.timer{margin-top:16px;background:#0d0914;padding:12px;border-radius:12px;color:#d7b8ff;font-weight:700}
-.tag{display:inline-block;font-size:11px;padding:5px 9px;border-radius:10px;background:#25143a;color:#d4b6ff;margin-top:12px}
-footer{padding:30px 7%;border-top:1px solid #2a2037;color:#8f879a;text-align:center}
-@media(max-width:650px){nav{display:none}.hero{padding-top:45px}}
+  :root {
+    --bg-dark: #0b0715;
+    --card-bg: #151020;
+    --border: #2c213d;
+    --accent: #a970ff;
+    --accent-hover: #8151b9;
+    --text-muted: #bcb4c9;
+    --gold: #ffc107;
+    --discord-color: #5865F2;
+    
+    /* Maze Item Colors */
+    --c-firecracker: #d32f2f;
+    --c-helmet: #795548;
+    --c-tickets: #7b1fa2;
+    --c-pineapple: #e65100;
+    --c-lkey: #1565c0;
+    --c-mkey: #fbc02d;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body { background: var(--bg-dark); color: #fff; padding-bottom: 50px; }
 
-.event-card{cursor:pointer;position:relative}
-.click-hint{margin-top:12px;color:#b88cff;font-size:12px;font-weight:700}
-.modal{display:none;position:fixed;inset:0;background:#000b;z-index:20;padding:20px;align-items:center;justify-content:center}
-.modal.show{display:flex}
-.modal-box{background:#151020;border:1px solid #7045a1;border-radius:22px;max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:28px;box-shadow:0 20px 80px #000}
-.modal-close{float:right;border:0;background:#291b39;color:#fff;border-radius:50%;width:36px;height:36px;font-size:20px;cursor:pointer}
-.modal-icon{font-size:52px;margin-bottom:8px}.modal h2{font-size:30px;margin-bottom:6px}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
-.info{background:#0d0914;border-radius:12px;padding:12px}.info b{display:block;color:#b88cff;font-size:12px;margin-bottom:3px}
-.modal h3{margin:18px 0 7px}.modal p,.modal li{color:#bcb4c9}.modal ul{padding-left:20px}
-@media(max-width:500px){.info-grid{grid-template-columns:1fr}}
+  header { padding: 18px 7%; display: flex; justify-content: space-between; align-items: center; background: #120c20; border-bottom: 1px solid #33234d; position: sticky; top: 0; z-index: 100; }
+  .logo { font-size: 22px; font-weight: 800; } .logo span { color: var(--accent); }
+  nav button { background: none; border: none; color: #ddd; font-size: 14px; cursor: pointer; padding: 8px 14px; border-radius: 8px; transition: 0.2s; }
+  nav button.active, nav button:hover { background: #25143a; color: var(--accent); font-weight: bold; }
+
+  .container { padding: 30px 5%; max-width: 1400px; margin: auto; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Info Banner */
+  .info-banner { background: #1a122c; border: 1px solid var(--accent); border-radius: 12px; padding: 15px 20px; margin-bottom: 25px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center; }
+  .info-stat { font-size: 14px; } .info-stat b { color: var(--gold); font-size: 16px; }
+
+  /* Grid Layouts */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-top: 20px; }
+  .tool-box { background: var(--card-bg); border: 1px solid var(--border); padding: 20px; border-radius: 16px; position: relative; }
+  
+  /* Inputs */
+  .form-group { margin-bottom: 15px; }
+  label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 14px; }
+  input, select { width: 100%; padding: 10px 12px; border-radius: 8px; background: #0d0914; color: #fff; border: 1px solid var(--border); outline: none; font-size: 14px; }
+  input:focus, select:focus { border-color: var(--accent); }
+  
+  /* Item Legend Tags */
+  .legend-box { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .legend-item { font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: bold; color: #fff; }
+  .bg-firecracker { background: var(--c-firecracker); }
+  .bg-helmet { background: var(--c-helmet); }
+  .bg-tickets { background: var(--c-tickets); }
+  .bg-pineapple { background: var(--c-pineapple); }
+  .bg-lkey { background: var(--c-lkey); }
+  .bg-mkey { background: var(--c-mkey); color: #000; }
+
+  /* Table Styling */
+  .table-wrapper { overflow-x: auto; background: #0d0914; border-radius: 12px; border: 1px solid var(--border); margin-top: 15px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+  th, td { padding: 10px 14px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th { background: #170f2b; color: var(--accent); font-weight: bold; }
+  
+  .badge { font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px; float: right; text-transform: uppercase; }
+  .badge-live { background: #4caf50; color: #fff; }
+  .badge-timed { background: #ff9800; color: #fff; }
+  .badge-skip { background: #f44336; color: #fff; }
+  .result-card { background: #0d0914; border-left: 4px solid var(--accent); padding: 12px; margin-top: 15px; border-radius: 4px; }
+
+  /* Discord Alert Section */
+  .btn-discord { width: 100%; padding: 10px; background: var(--discord-color); border: none; border-radius: 8px; color: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+  .btn-discord:hover { background: #4752c4; }
 </style>
 </head>
 <body>
+
 <header>
-  <div class="logo">🐉 Dragon <span>City Hub</span></div>
-  <nav><a href="#events">Events</a><a href="#upcoming">Upcoming</a><a href="#guides">Guides</a></nav>
+  <div class="logo">🐉 Dragon <span>Hub</span></div>
+  <nav>
+    <button class="nav-btn active" onclick="switchTab(event, 'chests')">Alliance Chests</button>
+    <button class="nav-btn" onclick="switchTab(event, 'maze')">Maze Event (Aug 13-24)</button>
+    <button class="nav-btn" onclick="switchTab(event, 'foodCalc')">Food Calc</button>
+  </nav>
 </header>
 
-<section class="hero">
-  <span class="badge">COMMUNITY EVENT TRACKER</span>
-  <h1>Every Dragon City event in one place.</h1>
-  <p>Track live events, countdowns, upcoming events and community guides from one clean dashboard.</p>
-</section>
+<main class="container">
 
-<main>
-<section class="container" id="events">
-  <h2 class="section-title">🔥 Live & Featured Events</h2>
-  <div class="grid">
-    <article class="card event-card" onclick="openEvent('maze')">
-      <div class="icon">🗺️</div><h3>Long Maze Island</h3>
-      <p class="muted">Sparkler Collection • 13 Aug – 24 Aug</p>
-      <div class="timer" data-end="2026-08-24T21:30:00+05:30">Loading countdown...</div>
-      <span class="tag">LIVE</span>
-      <div class="click-hint">Tap for event info →</div>
-    </article>
-    <article class="card event-card" onclick="openEvent('crown')">
-      <div class="icon">👑</div><h3>Corrupted Crown Event</h3>
-      <p class="muted">Corrupted Crown event • 30 Jul – 10 Sep</p>
-      <div class="timer" data-end="2026-09-10T21:30:00+05:30">Loading countdown...</div>
-      <span class="tag">LIVE</span>
-      <div class="click-hint">Tap for event info →</div>
-    </article>
-    <article class="card event-card" onclick="openEvent('race')">
-      <div class="icon">🏃</div><h3>Mythical Race</h3>
-      <p class="muted">Featured Dragon: Gel Barrier • 20 Aug – 3 Sep</p>
-      <div class="timer" data-end="2026-09-03T21:30:00+05:30">Loading countdown...</div>
-      <span class="tag">LIVE</span>
-      <div class="click-hint">Tap for event info →</div>
-    </article>
-  </div>
-</section>
+  <!-- TAB 1: ALLIANCE CHESTS & DISCORD PINGER -->
+  <section id="chests" class="tab-content active">
+    <h2>🏆 Alliance Chest Schedule</h2>
+    <p style="color: var(--text-muted); margin-top: 4px; font-size: 14px;">
+      The Fools Abode x Rebirth alliance schedule and target minimum scores[span_0](start_span)[span_0](end_span).
+    </p>
 
-<section class="container" id="upcoming">
-  <h2 class="section-title">📅 Upcoming</h2>
-  <div class="grid">
-    <article class="card"><div class="icon">🌫️</div><h3>Fog Island</h3><p class="muted">TruthBender Dragon • 24 Aug – 28 Aug</p></article>
-    <article class="card"><div class="icon">🧩</div><h3>Maze Island</h3><p class="muted">Sparkler Collection • 28 Aug – 3 Sep</p></article>
-    <article class="card"><div class="icon">🐉</div><h3>Seasonal Pet</h3><p class="muted">New Seasonal Pet • 20 Aug</p></article>
-  </div><h3>Puzzle Event</h3><p class="muted">Add the confirmed start date here.</p></article>
-    <article class="card"><div class="icon">🏃</div><h3>Runner Event</h3><p class="muted">Add the confirmed start date here.</p></article>
-    <article class="card"><div class="icon">🗺️</div><h3>Maze Event</h3><p class="muted">Add the confirmed start date here.</p></article>
-  </div>
-</section>
+    <div class="grid">
+      <!-- Active / Next Chest Focus -->
+      <div class="tool-box">
+        <span class="badge badge-live">Active</span>
+        <h3>🥚 Hatching Chest</h3>
+        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Duration: 3 Days (8-18-26)</p>
+        <div class="result-card" style="margin-top: 15px;">
+          <p>Minimum Required: <b style="color:var(--gold);">13k points</b></p>
+        </div>
+      </div>
 
-<section class="container" id="guides">
-  <h2 class="section-title">📚 Event Guides</h2>
-  <div class="grid">
-    <article class="card"><div class="icon">💡</div><h3>Event Strategies</h3><p class="muted">Tips, milestones and resource planning.</p></article>
-    <article class="card"><div class="icon">🐲</div><h3>Dragon Database</h3><p class="muted">Build a searchable database of event dragons.</p></article>
-    <article class="card"><div class="icon">🎯</div><h3>Free Rewards</h3><p class="muted">Highlight rewards players can obtain without spending.</p></article>
-  </div>
-</section>
+      <div class="tool-box">
+        <span class="badge badge-timed">Next Up</span>
+        <h3>⚔️ Upcoming Arena Chests</h3>
+        <div style="font-size: 13px; color: var(--text-muted); margin-top: 10px; line-height: 1.8;">
+          <p><b>Aug 28 – Aug 31 (3 Day):</b> Arena Chest — <b style="color:var(--gold);">10k min</b></p>
+          <p><b>Sep 08 – Sep 10 (2 Day):</b> Arena Chest — <b style="color:var(--gold);">7.1k min</b></p>
+        </div>
+      </div>
+
+      <!-- Discord Webhook Pinger Box -->
+      <div class="tool-box">
+        <h3>🔔 Discord Alliance Pinger</h3>
+        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Send instant alerts to your Discord alliance channel.</p>
+        
+        <div class="form-group" style="margin-top: 10px;">
+          <label>Webhook URL:</label>
+          <input type="text" id="webhookUrl" placeholder="https://discord.com/api/webhooks/...">
+        </div>
+        <div class="form-group">
+          <label>Alert Message / Ping Role:</label>
+          <input type="text" id="pingMessage" value="🚨 Alliance Chest Alert: New Arena Chest starting soon! Target: 10k points minimum!">
+        </div>
+        <button class="btn-discord" onclick="sendDiscordPing()">Send Discord Ping</button>
+      </div>
+    </div>
+
+    <!-- Complete Chest Schedule Table -->
+    <h3 style="margin-top: 30px;">📅 Full Schedule (Aug – Sep 2026)</h3>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Event Type</th>
+            <th>Duration</th>
+            <th>Start Date</th>
+            <th>Minimum Target</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>🥚 Hatch</td><td>3 Day</td><td>8-18-26</td><td>13k minimum</td><td><span class="badge badge-live">Active</span></td></tr>
+          <tr><td>🥚 L Breed</td><td>2 Day</td><td>8-22-26</td><td>SKIP</td><td><span class="badge badge-skip">SKIP</span></td></tr>
+          <tr><td>🏆 League</td><td>2 Day</td><td>8-25-26</td><td>8k minimum</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
+          <tr><td>⚔️ Arena</td><td>3 Day</td><td>8-28-26</td><td>10k minimum</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
+          <tr><td>🥚 E Breed</td><td>3 Day</td><td>9-01-26</td><td>SKIP</td><td><span class="badge badge-skip">SKIP</span></td></tr>
+          <tr><td>🥚 Hatch</td><td>2 Day</td><td>9-05-26</td><td>8.75k minimum</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
+          <tr><td>⚔️ Arena</td><td>2 Day</td><td>9-08-26</td><td>7.1k minimum</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
+          <tr><td>🥚 L Breed</td><td>3 Day</td><td>9-11-26</td><td>SKIP</td><td><span class="badge badge-skip">SKIP</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TAB 2: MAZE EVENT CALCULATOR -->
+  <section id="maze" class="tab-content">
+    <h2>🗺️ Maze Island Path & Cost Calculator (Aug 13 - 24)</h2>
+    <p style="color: var(--text-muted); margin-top: 4px; font-size: 14px;">
+      Path costs belong to path positions and colors, not specific dragons. Special items appear in identical spots across paths.
+    </p>
+
+    <!-- Start & Free Coin Summary -->
+    <div class="info-banner" style="margin-top: 15px;">
+      <div class="info-stat">Start Bonus: <b>700 Coins</b></div>
+      <div class="info-stat">Daily Collections (11 Days): <b>22,000 Coins</b></div>
+      <div class="info-stat">Total Free Currency: <b>22,700 Coins</b></div>
+    </div>
+
+    <!-- Item Legend -->
+    <div class="legend-box" style="margin-bottom: 20px;">
+      <span class="legend-item bg-firecracker">Firecracker</span>
+      <span class="legend-item bg-helmet">Eternal Helmet</span>
+      <span class="legend-item bg-tickets">Hollow Tickets</span>
+      <span class="legend-item bg-pineapple">Pineapple Chest</span>
+      <span class="legend-item bg-lkey">L Treasure Key</span>
+      <span class="legend-item bg-mkey">M Treasure Key</span>
+    </div>
+
+    <!-- Interactive Path Selector -->
+    <div class="grid">
+      <div class="tool-box">
+        <h3>Path Calculator</h3>
+        <div class="form-group" style="margin-top: 15px;">
+          <label>Select Target Dragon Path:</label>
+          <select id="dragonPathSelect" onchange="calculateMaze()">
+            <optgroup label="Main Paths">
+              <option value="28900|0|Spring Sniper">Spring Sniper - L#2199 (28,900 coins)</option>
+              <option value="750|0|Luminescent">Luminescent - R#64 (750 coins)</option>
+              <option value="2585|380|Loki">Loki - VR#197 (2,585 + 1 Key = 2,965 total)</option>
+              <option value="2605|1600|Sad">Sad - VR#337 (2,605 + 2 Keys = 4,955 total)</option>
+              <option value="3800|580|Mountain Ogre">Mountain Ogre - E#1414 (3,800 + 3 Keys = 7,750 total)</option>
+              <option value="4035|2590|Zombie Nature">Zombie Nature - E#1187 (4,035 + 4 Keys = 8,565 total)</option>
+              <option value="6525|1885|Native">Native - E#1161 (6,525 + 5 Keys = 13,645 total)</option>
+              <option value="6700|5525|Chichen Itza">Chichen Itza - E#1179 (6,700 + 6 Keys = 15,705 total)</option>
+              <option value="10440|0|Bandaged">Bandaged - L#2158 (10,440 + 7 Keys = 24,970 total)</option>
+            </optgroup>
+            <optgroup label="Time-Limited Paths">
+              <option value="2590|0|Dark Angel">Aug 14-16: Dark Angel - E#343 (2,590 coins)</option>
+              <option value="7850|0|Two-Headed">Aug 17-19: Two-Headed - R#134 (7,850 coins)</option>
+              <option value="5300|0|Plagued Pal">Aug 19-21: Plagued Pal - L#2151 (5,300 coins)</option>
+              <option value="21400|0|Abracadabra">Aug 22-23: Abracadabra - L#1871 (21,400 coins)</option>
+              <option value="9895|0|Estival">Aug 23-24: Estival - L#1857 (9,895 coins)</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Current Coins Held:</label>
+          <input type="number" id="heldCoins" value="0" min="0" oninput="calculateMaze()">
+        </div>
+
+        <div class="result-card">
+          <p>Total Path Cost: <b id="outTotal" style="color:var(--accent);">0</b></p>
+          <p>Coins Needed to Reach Key: <b id="outKeyCost" style="color:var(--gold);">0</b></p>
+          <p style="margin-top: 5px;">Coins Remaining to Collect: <b id="outNeeded" style="color:#ff5252;">0</b></p>
+        </div>
+      </div>
+
+      <div class="tool-box">
+        <h3>Time-Limited Path Windows</h3>
+        <div style="font-size: 13px; color: var(--text-muted); margin-top: 10px; line-height: 1.8;">
+          <p><b>Aug 14–16:</b> Dark Angel (2,590 coins)</p>
+          <p><b>Aug 17–19:</b> Two-Headed (7,850 coins)</p>
+          <p><b>Aug 19–21:</b> Plagued Pal (5,300 coins)</p>
+          <p><b>Aug 22–23:</b> Abracadabra (21,400 coins) • <span style="color:var(--gold);">Redemption Doom Available</span></p>
+          <p><b>Aug 23–24:</b> Estival (9,895 coins)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full Data Table -->
+    <h3 style="margin-top: 30px;">📋 Complete Maze Path Breakdown</h3>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Dragon Name</th>
+            <th>Rarity & ID</th>
+            <th>Type</th>
+            <th>Path Cost</th>
+            <th>Key Cost</th>
+            <th>Total Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Spring Sniper</td><td>L #2199</td><td><span class="badge badge-live">Open</span></td><td>28,900</td><td>0</td><td>28,900</td></tr>
+          <tr><td>Luminescent</td><td>R #64</td><td><span class="badge badge-live">Open</span></td><td>750</td><td>380</td><td>750</td></tr>
+          <tr><td>Loki</td><td>VR #197</td><td><span class="badge badge-live">1 Key</span></td><td>2,585</td><td>1,970</td><td>2,965</td></tr>
+          <tr><td>Sad</td><td>VR #337</td><td><span class="badge badge-live">2 Keys</span></td><td>2,605</td><td>1,600</td><td>4,955</td></tr>
+          <tr><td>Mountain Ogre</td><td>E #1414</td><td><span class="badge badge-live">3 Keys</span></td><td>3,800</td><td>580</td><td>7,750</td></tr>
+          <tr><td>Zombie Nature</td><td>E #1187</td><td><span class="badge badge-live">4 Keys</span></td><td>4,035</td><td>2,590</td><td>8,565</td></tr>
+          <tr><td>Native</td><td>E #1161</td><td><span class="badge badge-live">5 Keys</span></td><td>6,525</td><td>1,885</td><td>13,645</td></tr>
+          <tr><td>Chichen Itza</td><td>E #1179</td><td><span class="badge badge-live">6 Keys</span></td><td>6,700</td><td>5,525</td><td>15,705</td></tr>
+          <tr><td>Bandaged</td><td>L #2158</td><td><span class="badge badge-live">7 Keys</span></td><td>10,440</td><td>0</td><td>24,970</td></tr>
+          <tr><td>Dark Angel</td><td>E #343</td><td><span class="badge badge-timed">Aug 14-16</span></td><td>2,590</td><td>0</td><td>2,590</td></tr>
+          <tr><td>Two-Headed</td><td>R #134</td><td><span class="badge badge-timed">Aug 17-19</span></td><td>7,850</td><td>0</td><td>7,850</td></tr>
+          <tr><td>Plagued Pal</td><td>L #2151</td><td><span class="badge badge-timed">Aug 19-21</span></td><td>5,300</td><td>0</td><td>5,300</td></tr>
+          <tr><td>Abracadabra</td><td>L #1871</td><td><span class="badge badge-timed">Aug 22-23</span></td><td>21,400</td><td>0</td><td>21,400</td></tr>
+          <tr><td>Estival</td><td>L #1857</td><td><span class="badge badge-timed">Aug 23-24</span></td><td>9,895</td><td>0</td><td>9,895</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TAB 3: FOOD CALCULATOR -->
+  <section id="foodCalc" class="tab-content">
+    <h2>🍖 Dragon Food Calculator</h2>
+    <div style="max-width: 500px; margin-top: 20px;">
+      <div class="tool-box">
+        <div class="form-group">
+          <label>Starting Level:</label>
+          <input type="number" id="startLevel" value="1" min="1" max="69">
+        </div>
+        <div class="form-group">
+          <label>Target Level:</label>
+          <input type="number" id="targetLevel" value="40" min="2" max="70">
+        </div>
+        <button style="width:100%; padding: 10px; background: var(--accent); border:none; border-radius: 8px; color:#fff; font-weight:bold; cursor:pointer;" onclick="calculateFood()">Calculate Food Cost</button>
+        <div id="foodResultBox" class="result-card" style="display:none; margin-top:15px;">
+          <p>Total Food Required: <b id="totalFoodVal" style="color:var(--accent);">0</b></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
-
-<div class="modal" id="eventModal" onclick="closeIfOutside(event)">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeEvent()">×</button>
-    <div id="modalContent"></div>
-  </div>
-</div>
-<footer>Dragon City Event Hub • Community project<br><small>Event dates based on Dragon City’s official August 2026 event calendar. Events may change; check in-game news for the latest.</small></footer>
-
-
 <script>
-const eventInfo = {
-  maze: {
-    icon:"🗺️", title:"Long Maze Island",
-    dates:"13 Aug – 24 Aug 2026", type:"Maze Island",
-    dragon:"Event dragons vary by island",
-    description:"A Maze Island event where you collect event currency and spend it to move through paths and unlock rewards.",
-    rewards:["Dragons and event rewards along the maze paths","Event currency and milestone rewards","Final path rewards"],
-    tips:["Collect event currency whenever it is available.","Plan your path before spending currency.","Check the in-game event panel for the latest costs and rewards."]
-  },
-  crown: {
-    icon:"👑", title:"Corrupted Crown Event",
-    dates:"30 Jul – 10 Sep 2026", type:"Collection / seasonal event",
-    dragon:"Corrupted-themed rewards",
-    description:"A long-running seasonal event featuring Corrupted content and rewards.",
-    rewards:["Corrupted-themed dragons/rewards","Event collection rewards","Milestone prizes"],
-    tips:["Check daily event tasks.","Save useful resources for important milestones.","Always verify the current reward track in-game."]
-  },
-  race: {
-    icon:"🏃", title:"Mythical Race",
-    dates:"20 Aug – 3 Sep 2026", type:"Race event",
-    dragon:"Gel Barrier Dragon",
-    description:"Compete through race laps by completing tasks and collecting the required race items.",
-    rewards:["Gel Barrier Dragon","Race lap rewards","Milestone prizes"],
-    tips:["Complete tasks regularly instead of waiting until the end.","Watch your lap progress.","Coordinate your resource usage around important milestones."]
+function switchTab(evt, tabId) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  evt.currentTarget.classList.add('active');
+}
+
+function calculateMaze() {
+  const val = document.getElementById('dragonPathSelect').value.split('|');
+  const pathCost = parseInt(val[0]);
+  const keyCost = parseInt(val[1]);
+  const totalCost = pathCost + keyCost;
+  
+  const held = parseInt(document.getElementById('heldCoins').value) || 0;
+  const remaining = Math.max(0, totalCost - held);
+
+  document.getElementById('outTotal').textContent = totalCost.toLocaleString() + " Coins";
+  document.getElementById('outKeyCost').textContent = keyCost > 0 ? keyCost.toLocaleString() + " Coins" : "No Keys Needed";
+  document.getElementById('outNeeded').textContent = remaining.toLocaleString() + " Coins";
+}
+
+function calculateFood() {
+  const start = parseInt(document.getElementById('startLevel').value);
+  const target = parseInt(document.getElementById('targetLevel').value);
+
+  if (start >= target) {
+    alert("Target level must be greater than current level.");
+    return;
   }
-};
 
-function openEvent(id){
-  const e=eventInfo[id];
-  document.getElementById("modalContent").innerHTML=`
-    <div class="modal-icon">${e.icon}</div>
-    <h2>${e.title}</h2>
-    <p>${e.description}</p>
-    <div class="info-grid">
-      <div class="info"><b>DATES</b>${e.dates}</div>
-      <div class="info"><b>TYPE</b>${e.type}</div>
-      <div class="info"><b>FEATURED</b>${e.dragon}</div>
-      <div class="info"><b>STATUS</b>Check countdown above</div>
-    </div>
-    <h3>🎁 Rewards</h3>
-    <ul>${e.rewards.map(x=>`<li>${x}</li>`).join("")}</ul>
-    <h3>💡 Tips</h3>
-    <ul>${e.tips.map(x=>`<li>${x}</li>`).join("")}</ul>
-  `;
-  document.getElementById("eventModal").classList.add("show");
-  document.body.style.overflow="hidden";
+  let totalFood = 0;
+  for (let lvl = start; lvl < target; lvl++) {
+    if (lvl < 10) totalFood += Math.pow(lvl, 2) * 15;
+    else if (lvl < 40) totalFood += Math.pow(lvl, 2.8) * 8;
+    else totalFood += Math.pow(lvl, 3.1) * 6;
+  }
+
+  document.getElementById('totalFoodVal').textContent = Math.round(totalFood).toLocaleString() + " Food";
+  document.getElementById('foodResultBox').style.display = 'block';
 }
-function closeEvent(){
-  document.getElementById("eventModal").classList.remove("show");
-  document.body.style.overflow="";
+
+// --- DISCORD WEBHOOK PINGER ---
+function sendDiscordPing() {
+  const url = document.getElementById('webhookUrl').value.trim();
+  const msg = document.getElementById('pingMessage').value.trim();
+
+  if (!url) {
+    alert("Please enter a valid Discord Webhook URL.");
+    return;
+  }
+
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content: msg })
+  })
+  .then(res => {
+    if (res.ok) alert("Discord ping sent successfully!");
+    else alert("Failed to send message. Please check the Webhook URL.");
+  })
+  .catch(err => {
+    alert("Error sending request: " + err);
+  });
 }
-function closeIfOutside(e){
-  if(e.target.id==="eventModal") closeEvent();
-}
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEvent()});
+
+// Initial calculation call
+calculateMaze();
 </script>
 
-<script>
-function updateTimers(){
- document.querySelectorAll('.timer').forEach(el=>{
-   const end=new Date(el.dataset.end).getTime(), now=Date.now(), diff=end-now;
-   if(diff<=0){el.textContent="Event ended";return}
-   const d=Math.floor(diff/86400000), h=Math.floor(diff/3600000)%24,
-         m=Math.floor(diff/60000)%60, s=Math.floor(diff/1000)%60;
-   el.textContent=`${d}d ${h}h ${m}m ${s}s`;
- });
-}
-updateTimers(); setInterval(updateTimers,1000);
-</script>
 </body>
 </html>
+</file>
