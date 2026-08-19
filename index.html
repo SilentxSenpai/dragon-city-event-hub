@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dragon City Hub - Alliance Tracker</title>
+<title>The Fool's Abode - Alliance Tracker</title>
 <style>
   :root {
     --bg-dark: #0b0715;
@@ -15,20 +15,16 @@
     --text-muted: #bcb4c9;
     --gold: #ffc107;
     --discord-color: #5865F2;
-    
-    --c-firecracker: #d32f2f;
-    --c-helmet: #795548;
-    --c-tickets: #7b1fa2;
-    --c-pineapple: #e65100;
-    --c-lkey: #1565c0;
-    --c-mkey: #fbc02d;
   }
   
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
   body { background: var(--bg-dark); color: #fff; padding-bottom: 50px; }
 
   header { padding: 18px 7%; display: flex; justify-content: space-between; align-items: center; background: #120c20; border-bottom: 1px solid #33234d; position: sticky; top: 0; z-index: 100; }
+  .logo-container { display: flex; flex-direction: column; }
   .logo { font-size: 22px; font-weight: 800; } .logo span { color: var(--accent); }
+  .author-credit { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: -2px; }
+  
   nav button { background: none; border: none; color: #ddd; font-size: 14px; cursor: pointer; padding: 8px 14px; border-radius: 8px; transition: 0.2s; }
   nav button.active, nav button:hover { background: #25143a; color: var(--accent); font-weight: bold; }
 
@@ -46,15 +42,6 @@
   label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 14px; }
   input, select, textarea { width: 100%; padding: 10px 12px; border-radius: 8px; background: #0d0914; color: #fff; border: 1px solid var(--border); outline: none; font-size: 14px; }
   input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-  
-  .legend-box { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  .legend-item { font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: bold; color: #fff; }
-  .bg-firecracker { background: var(--c-firecracker); }
-  .bg-helmet { background: var(--c-helmet); }
-  .bg-tickets { background: var(--c-tickets); }
-  .bg-pineapple { background: var(--c-pineapple); }
-  .bg-lkey { background: var(--c-lkey); }
-  .bg-mkey { background: var(--c-mkey); color: #000; }
 
   .table-wrapper { overflow-x: auto; background: #0d0914; border-radius: 12px; border: 1px solid var(--border); margin-top: 15px; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
@@ -76,7 +63,10 @@
 <body>
 
 <header>
-  <div class="logo">🐉 Dragon <span>Hub</span></div>
+  <div class="logo-container">
+    <div class="logo">🏰 The Fool's <span>Abode</span></div>
+    <div class="author-credit">Created by silentxsenpai</div>
+  </div>
   <nav>
     <button class="nav-btn active" onclick="switchTab(event, 'chests')">Alliance Chests</button>
     <button class="nav-btn" onclick="switchTab(event, 'maze')">Maze Event (Aug 13-24)</button>
@@ -186,15 +176,15 @@
         <div class="form-group" style="margin-top: 15px;">
           <label>Select Target Dragon Path:</label>
           <select id="dragonPathSelect" onchange="calculateMaze()">
-            <option value="28900|0|Spring Sniper">Spring Sniper - L#2199 (28,900 coins)</option>
-            <option value="750|0|Luminescent">Luminescent - R#64 (750 coins)</option>
-            <option value="2585|380|Loki">Loki - VR#197 (2,585 + 1 Key = 2,965 total)</option>
-            <option value="2605|1600|Sad">Sad - VR#337 (2,605 + 2 Keys = 4,955 total)</option>
-            <option value="3800|580|Mountain Ogre">Mountain Ogre - E#1414 (3,800 + 3 Keys = 7,750 total)</option>
-            <option value="4035|2590|Zombie Nature">Zombie Nature - E#1187 (4,035 + 4 Keys = 8,565 total)</option>
-            <option value="6525|1885|Native">Native - E#1161 (6,525 + 5 Keys = 13,645 total)</option>
-            <option value="6700|5525|Chichen Itza">Chichen Itza - E#1179 (6,700 + 6 Keys = 15,705 total)</option>
-            <option value="10440|0|Bandaged">Bandaged - L#2158 (10,440 + 7 Keys = 24,970 total)</option>
+            <option value="750|0|Luminescent Dragon (Rare)">Luminescent Dragon - R#64 (750 coins)</option>
+            <option value="2585|380|Loki Dragon (Very Rare)">Loki Dragon - VR#197 (2,585 + 380 key = 2,965 total)</option>
+            <option value="2605|1600|Sad Dragon (Very Rare)">Sad Dragon - VR#337 (2,605 + 1,600 keys = 4,205 total)</option>
+            <option value="3800|3950|Mountain Ogre Dragon (Epic)">Mountain Ogre Dragon - E#1414 (3,800 + 3,950 keys = 7,750 total)</option>
+            <option value="4035|4530|Zombie Nature Dragon (Epic)">Zombie Nature Dragon - E#1187 (4,035 + 4,530 keys = 8,565 total)</option>
+            <option value="6525|7120|Native Dragon (Epic)">Native Dragon - E#1161 (6,525 + 7,120 keys = 13,645 total)</option>
+            <option value="6700|9005|Chichen Itza Dragon (Epic)">Chichen Itza Dragon - E#1179 (6,700 + 9,005 keys = 15,705 total)</option>
+            <option value="10440|14530|Bandaged Dragon (Legendary)">Bandaged Dragon - L#2158 (10,440 + 14,530 keys = 24,970 total)</option>
+            <option value="28900|0|Spring Sniper Dragon (Legendary)">Spring Sniper Dragon - L#2199 (28,900 coins - No Keys)</option>
           </select>
         </div>
 
@@ -204,9 +194,11 @@
         </div>
 
         <div class="result-card">
-          <p>Total Path Cost: <b id="outTotal" style="color:var(--accent);">0</b></p>
-          <p>Coins Needed to Reach Key: <b id="outKeyCost" style="color:var(--gold);">0</b></p>
-          <p style="margin-top: 5px;">Coins Remaining to Collect: <b id="outNeeded" style="color:#ff5252;">0</b></p>
+          <p>Path Cost: <b id="outPathOnly" style="color:#fff;">0 Coins</b></p>
+          <p style="margin-top:4px;">Keys Cost to Reach: <b id="outKeyCost" style="color:var(--gold);">0 Coins</b></p>
+          <hr style="border-color: var(--border); margin: 8px 0;">
+          <p>Total Cost: <b id="outTotal" style="color:var(--accent);">0 Coins</b></p>
+          <p style="margin-top: 4px;">Coins Still Needed: <b id="outNeeded" style="color:#ff5252;">0 Coins</b></p>
         </div>
       </div>
     </div>
@@ -227,8 +219,8 @@
         </div>
         <button style="width:100%; padding: 10px; background: var(--accent); border:none; border-radius: 8px; color:#fff; font-weight:bold; cursor:pointer;" onclick="calculateFood()">Calculate Food Cost</button>
         <div id="foodResultBox" class="result-card" style="margin-top:15px;">
-          <p>Total Food Required: <b id="totalFoodVal" style="color:var(--accent);">112,950,000 Food</b></p>
-          <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Level 1 → 70 requires 112.95M food in total.</p>
+          <p>Total Food Required: <b id="totalFoodVal" style="color:var(--accent);">112,760,000 Food (112.76M)</b></p>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Level 1 → 70 requires 112.76M food in total.</p>
         </div>
       </div>
     </div>
@@ -253,21 +245,39 @@ function calculateMaze() {
   const held = parseInt(document.getElementById('heldCoins').value) || 0;
   const remaining = Math.max(0, totalCost - held);
 
-  document.getElementById('outTotal').textContent = totalCost.toLocaleString() + " Coins";
+  document.getElementById('outPathOnly').textContent = pathCost.toLocaleString() + " Coins";
   document.getElementById('outKeyCost').textContent = keyCost > 0 ? keyCost.toLocaleString() + " Coins" : "No Keys Needed";
+  document.getElementById('outTotal').textContent = totalCost.toLocaleString() + " Coins";
   document.getElementById('outNeeded').textContent = remaining.toLocaleString() + " Coins";
 }
 
-// Accurate Food Cost Array capped at 70 (Total Level 1 -> 70 = 112,950,000)
-const cumulativeFood = [
-  0, 0, 30, 90, 210, 450, 930, 1890, 3810, 7650, 15330, 
-  25330, 38830, 56830, 80330, 110830, 149830, 198830, 259830, 334830, 425830, 
-  535830, 667830, 824830, 1009830, 1225830, 1475830, 1762830, 2090830, 2463830, 2885830, 
-  3360830, 3892830, 4485830, 5143830, 5870830, 6670830, 7547830, 8505830, 9548830, 10680830, 
-  12180830, 13980830, 16180830, 18880830, 22180830, 26180830, 31080830, 37080830, 44480830, 53480830, 
-  62480830, 71480830, 80480830, 89480830, 95480830, 99480830, 102480830, 104880830, 106880830, 108480830, 
-  109780830, 110780830, 111530830, 112080830, 112480830, 112730830, 112880830, 112930830, 112950830
-];
+const keyLevelMap = {
+  1: 0,
+  15: 7480,
+  20: 22000,
+  30: 565000,
+  40: 6280000,
+  45: 15170000,
+  50: 30870000,
+  55: 49880000,
+  60: 69850000,
+  70: 112760000
+};
+
+const cumulativeFood = new Array(71).fill(0);
+const milestones = [1, 15, 20, 30, 40, 45, 50, 55, 60, 70];
+
+for (let i = 0; i < milestones.length - 1; i++) {
+  const startLvl = milestones[i];
+  const endLvl = milestones[i + 1];
+  const startFood = keyLevelMap[startLvl];
+  const endFood = keyLevelMap[endLvl];
+
+  for (let lvl = startLvl; lvl <= endLvl; lvl++) {
+    const progress = (lvl - startLvl) / (endLvl - startLvl);
+    cumulativeFood[lvl] = Math.round(startFood + progress * (endFood - startFood));
+  }
+}
 
 function calculateFood() {
   let start = parseInt(document.getElementById('startLevel').value) || 1;
@@ -280,12 +290,16 @@ function calculateFood() {
     return;
   }
 
-  const startIdx = Math.min(start - 1, cumulativeFood.length - 1);
-  const targetIdx = Math.min(target - 1, cumulativeFood.length - 1);
+  const totalFood = cumulativeFood[target] - cumulativeFood[start];
   
-  const totalFood = cumulativeFood[targetIdx] - cumulativeFood[startIdx];
+  let formatted = totalFood.toLocaleString() + " Food";
+  if (totalFood >= 1000000) {
+    formatted += ` (${(totalFood / 1000000).toFixed(2)}M)`;
+  } else if (totalFood >= 1000) {
+    formatted += ` (${(totalFood / 1000).toFixed(1)}K)`;
+  }
 
-  document.getElementById('totalFoodVal').textContent = totalFood.toLocaleString() + " Food";
+  document.getElementById('totalFoodVal').textContent = formatted;
   document.getElementById('foodResultBox').style.display = 'block';
 }
 
@@ -330,7 +344,6 @@ function sendDiscordPing() {
   });
 }
 
-// Auto Scheduler Functionality
 let autoTimer = null;
 let triggeredEvents = {};
 
