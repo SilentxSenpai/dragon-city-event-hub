@@ -72,12 +72,13 @@
             margin-top: 5px;
         }
 
-        /* Tabs Navigation */
+        /* Navigation Tabs */
         .tabs {
             display: flex;
             justify-content: center;
             gap: 15px;
             margin-bottom: 25px;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
@@ -228,6 +229,10 @@
             <span class="header-icon">🏆</span>
             <span>Heroic Race</span>
         </button>
+        <button class="tab-btn" onclick="switchTab('alliance')">
+            <span class="header-icon">🛡️</span>
+            <span>Alliance Chest Reminder</span>
+        </button>
     </div>
 
     <!-- MAZE ISLAND SECTION -->
@@ -307,7 +312,7 @@
         </table>
     </div>
 
-    <!-- SEPARATE HEROIC RACE SECTION -->
+    <!-- HEROIC RACE SECTION -->
     <div id="race" class="tab-content">
         <div class="section-header">
             <span class="header-icon">🏆</span>
@@ -340,6 +345,34 @@
                 <!-- Javascript populated -->
             </tbody>
         </table>
+    </div>
+
+    <!-- ALLIANCE CHEST REMINDER SECTION -->
+    <div id="alliance" class="tab-content">
+        <div class="section-header">
+            <span class="header-icon">🛡️</span>
+            <h2>Alliance Chest Reminders & Tracker</h2>
+        </div>
+
+        <div class="grid-container">
+            <div class="info-card">
+                <h3>Active Chest Status</h3>
+                <p>Set automated notifications and ping alerts for your alliance members to guarantee Level 6 chest rewards every cycle.</p>
+            </div>
+            <div class="info-card">
+                <h3>Discord Ping Integration</h3>
+                <p>Connect your Discord webhook to issue automated start/end reminders for Arenas, Breeding, Hatching, and Food chest rotations.</p>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <strong>Chest Optimization Strategy:</strong>
+            <ul>
+                <li><strong>Arenas / League:</strong> Coordinate member attack windows so points are not wasted over max thresholds.</li>
+                <li><strong>Breeding / Hatching:</strong> Save long-duration eggs/breeds during off-chest hours and hatch them when the chest officially starts.</li>
+                <li><strong>Food Chests:</strong> Prepare your greenhouses in advance so harvests align directly with the active chest timer.</li>
+            </ul>
+        </div>
     </div>
 </div>
 
