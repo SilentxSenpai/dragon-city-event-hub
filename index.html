@@ -22,7 +22,7 @@
 
   header { padding: 18px 7%; display: flex; justify-content: space-between; align-items: center; background: #120c20; border-bottom: 1px solid #33234d; position: sticky; top: 0; z-index: 100; }
   .logo-header-group { display: flex; align-items: center; gap: 12px; }
-  .alliance-logo-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+  .alliance-logo-img { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; background: #030b1e; }
   .logo-container { display: flex; flex-direction: column; }
   .logo { font-size: 22px; font-weight: 800; } .logo span { color: var(--accent); }
   .author-credit { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: -2px; }
@@ -40,6 +40,9 @@
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-top: 20px; }
   .tool-box { background: var(--card-bg); border: 1px solid var(--border); padding: 20px; border-radius: 16px; position: relative; }
   
+  .countdown-box { background: linear-gradient(135deg, #1c1233 0%, #0d0914 100%); border: 1px solid var(--accent); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 25px; }
+  .countdown-timer { font-size: 28px; font-weight: 800; color: var(--gold); margin: 8px 0; font-family: monospace; }
+
   .form-group { margin-bottom: 15px; }
   label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 14px; }
   input, select, textarea { width: 100%; padding: 10px 12px; border-radius: 8px; background: #0d0914; color: #fff; border: 1px solid var(--border); outline: none; font-size: 14px; }
@@ -47,10 +50,10 @@
 
   .table-wrapper { overflow-x: auto; background: #0d0914; border-radius: 12px; border: 1px solid var(--border); margin-top: 15px; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-  th, td { padding: 10px 14px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th, td { padding: 12px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; }
   th { background: #170f2b; color: var(--accent); font-weight: bold; }
   
-  .badge { font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px; float: right; text-transform: uppercase; }
+  .badge { font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; display: inline-block; }
   .badge-live { background: #4caf50; color: #fff; }
   .badge-timed { background: #ff9800; color: #fff; }
   .badge-skip { background: #f44336; color: #fff; }
@@ -66,7 +69,6 @@
 
 <header>
   <div class="logo-header-group">
-    <!-- SVG matching the dark blue/cyan circular emblem with crescent swoosh -->
     <svg class="alliance-logo-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
@@ -76,7 +78,6 @@
         </radialGradient>
       </defs>
       <circle cx="50" cy="50" r="50" fill="url(#bgGlow)"/>
-      <!-- Glowing inner swirl elements -->
       <path d="M 25 55 C 20 25, 60 15, 78 35 C 60 25, 30 35, 32 60 C 33 72, 50 80, 65 75 C 40 85, 20 70, 25 55 Z" fill="#00e5ff" opacity="0.9"/>
       <path d="M 40 45 C 35 30, 65 20, 82 40 C 68 32, 45 40, 48 58 C 43 52, 38 50, 40 45 Z" fill="#ffffff" opacity="0.95"/>
       <circle cx="72" cy="38" r="4" fill="#ffffff"/>
@@ -100,11 +101,20 @@
   <section id="chests" class="tab-content active">
     <h2>🏆 Alliance Chest Schedule & Discord Pinger</h2>
 
+    <!-- REAL-TIME LOCAL COUNTDOWN BANNER -->
+    <div class="countdown-box" style="margin-top: 15px;">
+      <h4 style="color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">⏳ Next Chest Event Countdown</h4>
+      <div id="nextEventName" style="font-weight: bold; font-size: 18px; margin-top: 4px; color: #fff;">Calculating...</div>
+      <div class="countdown-timer" id="countdownTimer">00d 00h 00m 00s</div>
+      <div id="nextEventLocalTime" style="font-size: 13px; color: var(--accent);">Starts in your local time: Loading...</div>
+    </div>
+
     <div class="grid">
       <div class="tool-box">
-        <span class="badge badge-live">Active</span>
+        <span class="badge badge-live" style="float: right;">Active</span>
         <h3>🥚 Hatching Chest</h3>
-        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Duration: 3 Days (8-18-26)</p>
+        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Duration: 3 Days</p>
+        <p id="activeLocalTime" style="font-size: 12px; color: var(--gold); margin-top: 2px;"></p>
         <div class="result-card" style="margin-top: 15px;">
           <p>Minimum Required: <b style="color:var(--gold);">13k points</b></p>
           <p style="margin-top:4px;">Reward: <b style="color:var(--accent);">Food</b></p>
@@ -118,17 +128,19 @@
           <div class="form-group">
             <label>1. Select Chest Event:</label>
             <select id="pingChestSelect" onchange="updateMessagePreview()">
-              <option value="Hatch Chest 🥚|3 Days|13k|Food|2026-08-18T12:00:00">Hatch Chest 🥚 (3 Days) — 13k Min (Food)</option>
-              <option value="League Chest 🏆|2 Days|8k|Food|2026-08-25T12:00:00">League Chest 🏆 (2 Days) — 8k Min (Food)</option>
-              <option value="Arena Chest ⚔️|3 Days|10k|Gems|2026-08-28T12:00:00" selected>Arena Chest ⚔️ (3 Days) — 10k Min (Gems)</option>
-              <option value="Hatch Chest 🥚|2 Days|8.75k|Food|2026-09-05T12:00:00">Hatch Chest 🥚 (2 Days) — 8.75k Min (Food)</option>
-              <option value="Arena Chest ⚔️|2 Days|7.1k|Gems|2026-09-08T12:00:00">Arena Chest ⚔️ (2 Days) — 7.1k Min (Gems)</option>
+              <!-- Dates stored in UTC ISO string for accurate local conversion -->
+              <option value="Hatch Chest 🥚|3 Days|13k|Food|2026-08-18T16:00:00Z">Hatch Chest 🥚 (3 Days) — 13k Min (Food)</option>
+              <option value="League Chest 🏆|2 Days|8k|Food|2026-08-25T16:00:00Z">League Chest 🏆 (2 Days) — 8k Min (Food)</option>
+              <option value="Arena Chest ⚔️|3 Days|10k|Gems|2026-08-28T16:00:00Z" selected>Arena Chest ⚔️ (3 Days) — 10k Min (Gems)</option>
+              <option value="Hatch Chest 🥚|2 Days|8.75k|Food|2026-09-05T16:00:00Z">Hatch Chest 🥚 (2 Days) — 8.75k Min (Food)</option>
+              <option value="Arena Chest ⚔️|2 Days|7.1k|Gems|2026-09-08T16:00:00Z">Arena Chest ⚔️ (2 Days) — 7.1k Min (Gems)</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label>2. Role Tag / Ping:</label>
-            <input type="text" id="pingTag" value="<@&1528588394379350037>" placeholder="<@&ROLE_ID>" oninput="updateMessagePreview()">
+            <label>2. Role Tag / Ping (Paste your Role ID here):</label>
+            <!-- Default role removed; empty input for users to fill -->
+            <input type="text" id="pingTag" value="" placeholder="e.g. <@&ROLE_ID>" oninput="updateMessagePreview()">
           </div>
         </div>
 
@@ -149,33 +161,26 @@
 
         <button class="btn-discord" onclick="sendDiscordPing()">🚀 Send Ping Now</button>
         <button id="autoBtn" class="btn-discord btn-auto" onclick="toggleAutoScheduler()">⏰ Start Auto Scheduler (Keep Tab Open)</button>
-        <p id="autoStatus" style="font-size: 12px; color: var(--text-muted); margin-top: 8px; text-align: center;"></p>
+        <p id="autoStatus" style="font-size: 12px; color: var(--gold); margin-top: 8px; text-align: center; font-weight: bold;"></p>
       </div>
     </div>
 
-    <!-- Schedule Table -->
-    <h3 style="margin-top: 30px;">📅 Full Schedule (Aug – Sep 2026)</h3>
+    <!-- Schedule Table with Localized Start Times -->
+    <h3 style="margin-top: 30px;">📅 Full Schedule (Your Local Start Times)</h3>
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
             <th>Event Type</th>
             <th>Duration</th>
-            <th>Start Date</th>
+            <th>Start Time (Your Timezone)</th>
             <th>Minimum Target</th>
             <th>Reward</th>
             <th>Status</th>
           </tr>
         </thead>
-        <tbody>
-          <tr><td>🥚 Hatch</td><td>3 Day</td><td>8-18-26</td><td>13k minimum</td><td>Food</td><td><span class="badge badge-live">Active</span></td></tr>
-          <tr><td>🥚 L Breed</td><td>2 Day</td><td>8-22-26</td><td>SKIP</td><td>—</td><td><span class="badge badge-skip">SKIP</span></td></tr>
-          <tr><td>🏆 League</td><td>2 Day</td><td>8-25-26</td><td>8k minimum</td><td>Food</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
-          <tr><td>⚔️ Arena</td><td>3 Day</td><td>8-28-26</td><td>10k minimum</td><td>Gems</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
-          <tr><td>🥚 E Breed</td><td>3 Day</td><td>9-01-26</td><td>SKIP</td><td>—</td><td><span class="badge badge-skip">SKIP</span></td></tr>
-          <tr><td>🥚 Hatch</td><td>2 Day</td><td>9-05-26</td><td>8.75k minimum</td><td>Food</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
-          <tr><td>⚔️ Arena</td><td>2 Day</td><td>9-08-26</td><td>7.1k minimum</td><td>Gems</td><td><span class="badge badge-timed">Upcoming</span></td></tr>
-          <tr><td>🥚 L Breed</td><td>3 Day</td><td>9-11-26</td><td>SKIP</td><td>—</td><td><span class="badge badge-skip">SKIP</span></td></tr>
+        <tbody id="scheduleTableBody">
+          <!-- Populated dynamically in user's exact local time -->
         </tbody>
       </table>
     </div>
@@ -184,6 +189,7 @@
   <!-- TAB 2: MAZE EVENT CALCULATOR -->
   <section id="maze" class="tab-content">
     <h2>🗺️ Maze Island Path & Full Cost Breakdown (Aug 13 - 24)</h2>
+    
     <div class="info-banner" style="margin-top: 15px;">
       <div class="info-stat">Start Bonus: <b>700 Coins</b></div>
       <div class="info-stat">Daily Collections (11 Days): <b>22,000 Coins</b></div>
@@ -223,92 +229,94 @@
       </div>
     </div>
 
-    <!-- Complete Breakdown Table Restored -->
-    <h3 style="margin-top: 30px;">📊 Complete Maze Island Path Breakdown</h3>
+    <!-- COMPLETE BREAKDOWN TABLE -->
+    <h3 style="margin-top: 35px;">📊 Complete Maze Island Path & Key Cost Table</h3>
+    <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px; margin-bottom: 10px;">Full detailed cost per dragon including prerequisite keys required to reach them.</p>
+
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
             <th>Dragon Name</th>
-            <th>Rarity</th>
-            <th>Path Cost</th>
-            <th>Prerequisites / Keys Required</th>
+            <th>Rarity / ID</th>
+            <th>Direct Path Cost</th>
+            <th>Prerequisites / Key Cost</th>
             <th>Total Cost</th>
-            <th>F2P Achievable?</th>
+            <th>F2P Status</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><b>Luminescent Dragon</b></td>
             <td>Rare (#64)</td>
-            <td>750</td>
+            <td>750 Coins</td>
             <td>None</td>
-            <td>750</td>
-            <td><span class="badge badge-live">Yes</span></td>
+            <td><b style="color: var(--accent);">750 Coins</b></td>
+            <td><span class="badge badge-live">F2P Easy</span></td>
           </tr>
           <tr>
             <td><b>Loki Dragon</b></td>
             <td>Very Rare (#197)</td>
-            <td>2,585</td>
+            <td>2,585 Coins</td>
             <td>Luminescent Key (380)</td>
-            <td>2,965</td>
-            <td><span class="badge badge-live">Yes</span></td>
+            <td><b style="color: var(--accent);">2,965 Coins</b></td>
+            <td><span class="badge badge-live">F2P Easy</span></td>
           </tr>
           <tr>
             <td><b>Sad Dragon</b></td>
             <td>Very Rare (#337)</td>
-            <td>2,605</td>
+            <td>2,605 Coins</td>
             <td>Loki Key (1,600)</td>
-            <td>4,205</td>
-            <td><span class="badge badge-live">Yes</span></td>
+            <td><b style="color: var(--accent);">4,205 Coins</b></td>
+            <td><span class="badge badge-live">F2P Easy</span></td>
           </tr>
           <tr>
             <td><b>Mountain Ogre Dragon</b></td>
             <td>Epic (#1414)</td>
-            <td>3,800</td>
+            <td>3,800 Coins</td>
             <td>Sad Key (3,950)</td>
-            <td>7,750</td>
-            <td><span class="badge badge-live">Yes</span></td>
+            <td><b style="color: var(--accent);">7,750 Coins</b></td>
+            <td><span class="badge badge-live">F2P Achievable</span></td>
           </tr>
           <tr>
             <td><b>Zombie Nature Dragon</b></td>
             <td>Epic (#1187)</td>
-            <td>4,035</td>
+            <td>4,035 Coins</td>
             <td>Mountain Ogre Key (4,530)</td>
-            <td>8,565</td>
-            <td><span class="badge badge-live">Yes</span></td>
+            <td><b style="color: var(--accent);">8,565 Coins</b></td>
+            <td><span class="badge badge-live">F2P Achievable</span></td>
           </tr>
           <tr>
             <td><b>Native Dragon</b></td>
             <td>Epic (#1161)</td>
-            <td>6,525</td>
+            <td>6,525 Coins</td>
             <td>Zombie Nature Key (7,120)</td>
-            <td>13,645</td>
-            <td><span class="badge badge-live">Yes</span></td>
+            <td><b style="color: var(--accent);">13,645 Coins</b></td>
+            <td><span class="badge badge-live">F2P Achievable</span></td>
           </tr>
           <tr>
             <td><b>Chichen Itza Dragon</b></td>
             <td>Epic (#1179)</td>
-            <td>6,700</td>
+            <td>6,700 Coins</td>
             <td>Native Key (9,005)</td>
-            <td>15,705</td>
-            <td><span class="badge badge-live">Yes</span></td>
+            <td><b style="color: var(--accent);">15,705 Coins</b></td>
+            <td><span class="badge badge-live">F2P Achievable</span></td>
           </tr>
           <tr>
             <td><b>Bandaged Dragon</b></td>
             <td>Legendary (#2158)</td>
-            <td>10,440</td>
+            <td>10,440 Coins</td>
             <td>Chichen Itza Key (14,530)</td>
-            <td>24,970</td>
-            <td><span class="badge badge-skip">P2W / Extra Coins Needed</span></td>
+            <td><b style="color: #ff9800;">24,970 Coins</b></td>
+            <td><span class="badge badge-skip">Requires Boosters</span></td>
           </tr>
           <tr>
             <td><b>Spring Sniper Dragon</b></td>
             <td>Legendary (#2199)</td>
-            <td>28,900</td>
-            <td>None (Direct Path)</td>
-            <td>28,900</td>
-            <td><span class="badge badge-skip">P2W / Extra Coins Needed</span></td>
+            <td>28,900 Coins</td>
+            <td>Direct Path (No Keys)</td>
+            <td><b style="color: #f44336;">28,900 Coins</b></td>
+            <td><span class="badge badge-skip">P2W / Offer Coins</span></td>
           </tr>
         </tbody>
       </table>
@@ -340,6 +348,82 @@
 </main>
 
 <script>
+// Event Data using UTC standard dates (Matches 9:30 PM IST / 16:00 UTC)
+const chestEvents = [
+  { name: "Hatch Chest 🥚", duration: "3 Day", min: "13k minimum", reward: "Food", dateIso: "2026-08-18T16:00:00Z", badge: "badge-live", status: "Active" },
+  { name: "L Breed 🥚", duration: "2 Day", min: "SKIP", reward: "—", dateIso: "2026-08-22T16:00:00Z", badge: "badge-skip", status: "SKIP" },
+  { name: "League Chest 🏆", duration: "2 Day", min: "8k minimum", reward: "Food", dateIso: "2026-08-25T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
+  { name: "Arena Chest ⚔️", duration: "3 Day", min: "10k minimum", reward: "Gems", dateIso: "2026-08-28T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
+  { name: "E Breed 🥚", duration: "3 Day", min: "SKIP", reward: "—", dateIso: "2026-09-01T16:00:00Z", badge: "badge-skip", status: "SKIP" },
+  { name: "Hatch Chest 🥚", duration: "2 Day", min: "8.75k minimum", reward: "Food", dateIso: "2026-09-05T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
+  { name: "Arena Chest ⚔️", duration: "2 Day", min: "7.1k minimum", reward: "Gems", dateIso: "2026-09-08T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
+  { name: "L Breed 🥚", duration: "3 Day", min: "SKIP", reward: "—", dateIso: "2026-09-11T16:00:00Z", badge: "badge-skip", status: "SKIP" }
+];
+
+function formatLocalTime(isoString) {
+  const d = new Date(isoString);
+  return d.toLocaleString([], {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+function renderLocalSchedule() {
+  const tbody = document.getElementById('scheduleTableBody');
+  tbody.innerHTML = '';
+
+  chestEvents.forEach(evt => {
+    const localTimeStr = formatLocalTime(evt.dateIso);
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><b>${evt.name}</b></td>
+      <td>${evt.duration}</td>
+      <td><b style="color: var(--accent);">${localTimeStr}</b></td>
+      <td>${evt.min}</td>
+      <td>${evt.reward}</td>
+      <td><span class="badge ${evt.badge}">${evt.status}</span></td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  document.getElementById('activeLocalTime').textContent = "Start Time: " + formatLocalTime(chestEvents[0].dateIso);
+}
+
+function updateCountdown() {
+  const now = new Date();
+  let nextEvent = null;
+
+  for (let evt of chestEvents) {
+    const eventTime = new Date(evt.dateIso);
+    if (eventTime > now) {
+      nextEvent = evt;
+      break;
+    }
+  }
+
+  if (!nextEvent) {
+    document.getElementById('nextEventName').textContent = "All scheduled events finished";
+    document.getElementById('countdownTimer').textContent = "00d 00h 00m 00s";
+    document.getElementById('nextEventLocalTime').textContent = "";
+    return;
+  }
+
+  document.getElementById('nextEventName').textContent = nextEvent.name + " (" + nextEvent.duration + ")";
+  document.getElementById('nextEventLocalTime').textContent = "Exact Local Start: " + formatLocalTime(nextEvent.dateIso);
+
+  const diff = new Date(nextEvent.dateIso) - now;
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / 1000 / 60) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  document.getElementById('countdownTimer').textContent = 
+    `${String(days).padStart(2, '0')}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+}
+
 function switchTab(evt, tabId) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
@@ -362,19 +446,7 @@ function calculateMaze() {
   document.getElementById('outNeeded').textContent = remaining.toLocaleString() + " Coins";
 }
 
-const keyLevelMap = {
-  1: 0,
-  15: 7480,
-  20: 22000,
-  30: 565000,
-  40: 6280000,
-  45: 15170000,
-  50: 30870000,
-  55: 49880000,
-  60: 69850000,
-  70: 112760000
-};
-
+const keyLevelMap = { 1: 0, 15: 7480, 20: 22000, 30: 565000, 40: 6280000, 45: 15170000, 50: 30870000, 55: 49880000, 60: 69850000, 70: 112760000 };
 const cumulativeFood = new Array(71).fill(0);
 const milestones = [1, 15, 20, 30, 40, 45, 50, 55, 60, 70];
 
@@ -402,13 +474,9 @@ function calculateFood() {
   }
 
   const totalFood = cumulativeFood[target] - cumulativeFood[start];
-  
   let formatted = totalFood.toLocaleString() + " Food";
-  if (totalFood >= 1000000) {
-    formatted += ` (${(totalFood / 1000000).toFixed(2)}M)`;
-  } else if (totalFood >= 1000) {
-    formatted += ` (${(totalFood / 1000).toFixed(1)}K)`;
-  }
+  if (totalFood >= 1000000) formatted += ` (${(totalFood / 1000000).toFixed(2)}M)`;
+  else if (totalFood >= 1000) formatted += ` (${(totalFood / 1000).toFixed(1)}K)`;
 
   document.getElementById('totalFoodVal').textContent = formatted;
   document.getElementById('foodResultBox').style.display = 'block';
@@ -424,7 +492,8 @@ function generateMessage() {
   const minPts = selectedData[2];
   const reward = selectedData[3];
 
-  return `${tag}\n**[The ${name}]** ${status}\n\nDuration: ${duration}\nMin pts: ${minPts}\nReward: ${reward}`;
+  const tagLine = tag ? tag + "\n" : "";
+  return `${tagLine}**[The ${name}]** ${status}\n\nDuration: ${duration}\nMin pts: ${minPts}\nReward: ${reward}`;
 }
 
 function updateMessagePreview() {
@@ -433,14 +502,11 @@ function updateMessagePreview() {
 
 function sendDiscordPing() {
   const url = document.getElementById('webhookUrl').value.trim();
-
   if (!url) {
     alert("Please enter a valid Discord Webhook URL.");
     return;
   }
-
   const messageText = generateMessage();
-
   fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -450,9 +516,7 @@ function sendDiscordPing() {
     if (res.ok) alert("Discord ping sent successfully!");
     else alert("Failed to send message. Please check your Webhook URL.");
   })
-  .catch(err => {
-    alert("Error sending request: " + err);
-  });
+  .catch(err => alert("Error sending request: " + err));
 }
 
 let autoTimer = null;
@@ -468,17 +532,17 @@ function toggleAutoScheduler() {
       alert("Please enter a Webhook URL before starting the scheduler.");
       return;
     }
-    autoTimer = setInterval(checkAndAutoPing, 60000);
+    autoTimer = setInterval(checkAndAutoPing, 30000);
     btn.textContent = "🛑 Stop Auto Scheduler";
     btn.style.background = "#c62828";
-    status.textContent = "Auto Scheduler Running: Checking start times every minute...";
+    status.textContent = "🟢 Auto Scheduler Active: Monitoring start times and pings automatically when event starts!";
     checkAndAutoPing();
   } else {
     clearInterval(autoTimer);
     autoTimer = null;
     btn.textContent = "⏰ Start Auto Scheduler (Keep Tab Open)";
     btn.style.background = "#2e7d32";
-    status.textContent = "Auto Scheduler stopped.";
+    status.textContent = "🔴 Auto Scheduler stopped.";
   }
 }
 
@@ -495,20 +559,27 @@ function checkAndAutoPing() {
     const reward = parts[3];
     const startTime = new Date(parts[4]);
 
+    // Check if event start is within 5 minutes or passed less than 5 minutes ago
     if (Math.abs(now - startTime) <= 300000 && !triggeredEvents[name]) {
       triggeredEvents[name] = true;
       const tag = document.getElementById('pingTag').value.trim();
-      const autoMsg = `${tag}\n**[The ${name}]** Begins Now\n\nDuration: ${duration}\nMin pts: ${minPts}\nReward: ${reward}`;
+      const tagLine = tag ? tag + "\n" : "";
+      const autoMsg = `${tagLine}**[The ${name}]** Begins Now\n\nDuration: ${duration}\nMin pts: ${minPts}\nReward: ${reward}`;
 
       fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: autoMsg })
       });
+      
+      document.getElementById('autoStatus').textContent = `✅ Auto ping sent for ${name} at ${now.toLocaleTimeString()}!`;
     }
   }
 }
 
+renderLocalSchedule();
+updateCountdown();
+setInterval(updateCountdown, 1000);
 calculateMaze();
 calculateFood();
 updateMessagePreview();
