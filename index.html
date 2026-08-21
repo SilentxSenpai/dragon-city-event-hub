@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Fool's Abode - Alliance Tracker</title>
+<title>The Fool's Abode - Alliance & Event Hub</title>
 <style>
   :root {
     --bg-dark: #0b0715;
@@ -63,6 +63,11 @@
   .btn-discord:hover { background: #4752c4; }
   .btn-auto { background: #2e7d32; }
   .btn-auto:hover { background: #1b5e20; }
+  .btn-reset { background: #44335c; color: #fff; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; margin-top: 5px; }
+
+  .guide-card { background: #120b22; border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 15px; }
+  .guide-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; }
+  .task-tag { background: #25143a; color: var(--accent); font-size: 11px; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--accent); }
 </style>
 </head>
 <body>
@@ -79,7 +84,7 @@
       </defs>
       <circle cx="50" cy="50" r="50" fill="url(#bgGlow)"/>
       <path d="M 25 55 C 20 25, 60 15, 78 35 C 60 25, 30 35, 32 60 C 33 72, 50 80, 65 75 C 40 85, 20 70, 25 55 Z" fill="#00e5ff" opacity="0.9"/>
-      <path d="M 40 45 C 35 30, 65 20, 82 40 C 68 32, 45 40, 48 58 C 43 52, 38 50, 40 45 Z" fill="#ffffff" opacity="0.95"/>
+      <path d="M 40 45 C 35 20, 65 20, 82 40 C 68 32, 45 40, 48 58 C 43 52, 38 50, 40 45 Z" fill="#ffffff" opacity="0.95"/>
       <circle cx="72" cy="38" r="4" fill="#ffffff"/>
       <circle cx="28" cy="62" r="2.5" fill="#00e5ff"/>
     </svg>
@@ -89,19 +94,18 @@
     </div>
   </div>
   <nav>
-    <button class="nav-btn active" onclick="switchTab(event, 'chests')">Alliance Chests</button>
-    <button class="nav-btn" onclick="switchTab(event, 'maze')">Maze Event (Aug 13-24)</button>
-    <button class="nav-btn" onclick="switchTab(event, 'foodCalc')">Food Calc</button>
+    <button class="nav-btn active" onclick="switchTab(event, 'chests')">🏆 Alliance Chests</button>
+    <button class="nav-btn" onclick="switchTab(event, 'pinger')">🔔 Custom Discord Pinger</button>
+    <button class="nav-btn" onclick="switchTab(event, 'events')">🎉 Live Events & Race Guide</button>
   </nav>
 </header>
 
 <main class="container">
 
-  <!-- TAB 1: ALLIANCE CHESTS & DISCORD PINGER -->
+  <!-- TAB 1: ALLIANCE CHESTS -->
   <section id="chests" class="tab-content active">
-    <h2>🏆 Alliance Chest Schedule & Discord Pinger</h2>
+    <h2>🏆 Alliance Chest Schedule</h2>
 
-    <!-- REAL-TIME LOCAL COUNTDOWN BANNER -->
     <div class="countdown-box" style="margin-top: 15px;">
       <h4 style="color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">⏳ Next Chest Event Countdown</h4>
       <div id="nextEventName" style="font-weight: bold; font-size: 18px; margin-top: 4px; color: #fff;">Calculating...</div>
@@ -120,38 +124,54 @@
           <p style="margin-top:4px;">Reward: <b style="color:var(--accent);">Food</b></p>
         </div>
       </div>
+    </div>
 
-      <div class="tool-box" style="grid-column: span 2;">
-        <h3>🔔 Simple Discord Text Pinger</h3>
+    <h3 style="margin-top: 30px;">📅 Full Chest Schedule (Your Local Start Times)</h3>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Event Type</th>
+            <th>Duration</th>
+            <th>Start Time (Local)</th>
+            <th>Minimum Target</th>
+            <th>Reward</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="scheduleTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TAB 2: DISCORD PINGER -->
+  <section id="pinger" class="tab-content">
+    <h2>🔔 Custom Discord Text Pinger</h2>
+    
+    <div class="grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="tool-box">
+        <h3>Ping Configuration</h3>
         
-        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 0;">
-          <div class="form-group">
-            <label>1. Select Chest Event:</label>
-            <select id="pingChestSelect" onchange="updateMessagePreview()">
-              <!-- Dates stored in UTC ISO string for accurate local conversion -->
-              <option value="Hatch Chest 🥚|3 Days|13k|Food|2026-08-18T16:00:00Z">Hatch Chest 🥚 (3 Days) — 13k Min (Food)</option>
-              <option value="League Chest 🏆|2 Days|8k|Food|2026-08-25T16:00:00Z">League Chest 🏆 (2 Days) — 8k Min (Food)</option>
-              <option value="Arena Chest ⚔️|3 Days|10k|Gems|2026-08-28T16:00:00Z" selected>Arena Chest ⚔️ (3 Days) — 10k Min (Gems)</option>
-              <option value="Hatch Chest 🥚|2 Days|8.75k|Food|2026-09-05T16:00:00Z">Hatch Chest 🥚 (2 Days) — 8.75k Min (Food)</option>
-              <option value="Arena Chest ⚔️|2 Days|7.1k|Gems|2026-09-08T16:00:00Z">Arena Chest ⚔️ (2 Days) — 7.1k Min (Gems)</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>2. Role Tag / Ping (Paste your Role ID here):</label>
-            <!-- Default role removed; empty input for users to fill -->
-            <input type="text" id="pingTag" value="" placeholder="e.g. <@&ROLE_ID>" oninput="updateMessagePreview()">
-          </div>
+        <div class="form-group" style="margin-top: 15px;">
+          <label>1. Select Chest Event Preset:</label>
+          <select id="pingChestSelect" onchange="loadPresetMessage()">
+            <option value="Hatch Chest 🥚|3 Days|13k|Food">Hatch Chest 🥚 (3 Days) — 13k Min (Food)</option>
+            <option value="League Chest 🏆|2 Days|8k|Food">League Chest 🏆 (2 Days) — 8k Min (Food)</option>
+            <option value="Arena Chest ⚔️|3 Days|10k|Gems" selected>Arena Chest ⚔️ (3 Days) — 10k Min (Gems)</option>
+            <option value="Hatch Chest 🥚|2 Days|8.75k|Food">Hatch Chest 🥚 (2 Days) — 8.75k Min (Food)</option>
+            <option value="Arena Chest ⚔️|2 Days|7.1k|Gems">Arena Chest ⚔️ (2 Days) — 7.1k Min (Gems)</option>
+          </select>
         </div>
 
         <div class="form-group">
-          <label>3. Timing Status Text:</label>
-          <input type="text" id="pingStatus" value="Begins Now" placeholder="e.g. Begins Now" oninput="updateMessagePreview()">
+          <label>2. Role Tag / Ping (Empty by default):</label>
+          <input type="text" id="pingTag" value="" placeholder="e.g. <@&ROLE_ID>" oninput="updateMessagePreview()">
         </div>
 
         <div class="form-group">
-          <label>Live Discord Output Preview:</label>
-          <div id="msgPreview" style="background: #0d0914; border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 13px; white-space: pre-wrap; color: #a970ff;"></div>
+          <label>3. Edit Message Format (Fully Customizable):</label>
+          <textarea id="customMessageTemplate" rows="5" oninput="updateMessagePreview()"></textarea>
+          <button class="btn-reset" onclick="resetDefaultMessage()">Reset to Default Template</button>
         </div>
 
         <div class="form-group">
@@ -160,254 +180,152 @@
         </div>
 
         <button class="btn-discord" onclick="sendDiscordPing()">🚀 Send Ping Now</button>
-        <button id="autoBtn" class="btn-discord btn-auto" onclick="toggleAutoScheduler()">⏰ Start Auto Scheduler (Keep Tab Open)</button>
-        <p id="autoStatus" style="font-size: 12px; color: var(--gold); margin-top: 8px; text-align: center; font-weight: bold;"></p>
       </div>
-    </div>
 
-    <!-- Schedule Table with Localized Start Times -->
-    <h3 style="margin-top: 30px;">📅 Full Schedule (Your Local Start Times)</h3>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Event Type</th>
-            <th>Duration</th>
-            <th>Start Time (Your Timezone)</th>
-            <th>Minimum Target</th>
-            <th>Reward</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="scheduleTableBody">
-          <!-- Populated dynamically in user's exact local time -->
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- TAB 2: MAZE EVENT CALCULATOR -->
-  <section id="maze" class="tab-content">
-    <h2>🗺️ Maze Island Path & Full Cost Breakdown (Aug 13 - 24)</h2>
-    
-    <div class="info-banner" style="margin-top: 15px;">
-      <div class="info-stat">Start Bonus: <b>700 Coins</b></div>
-      <div class="info-stat">Daily Collections (11 Days): <b>22,000 Coins</b></div>
-      <div class="info-stat">Total Free Currency: <b>22,700 Coins</b></div>
-    </div>
-
-    <div class="grid">
       <div class="tool-box">
-        <h3>Path Calculator</h3>
+        <h3>Live Preview & 24/7 Setup</h3>
+        
         <div class="form-group" style="margin-top: 15px;">
-          <label>Select Target Dragon Path:</label>
-          <select id="dragonPathSelect" onchange="calculateMaze()">
-            <option value="750|0|Luminescent Dragon (Rare)">Luminescent Dragon - R#64 (750 coins)</option>
-            <option value="2585|380|Loki Dragon (Very Rare)">Loki Dragon - VR#197 (2,585 + 380 key = 2,965 total)</option>
-            <option value="2605|1600|Sad Dragon (Very Rare)">Sad Dragon - VR#337 (2,605 + 1,600 keys = 4,205 total)</option>
-            <option value="3800|3950|Mountain Ogre Dragon (Epic)">Mountain Ogre Dragon - E#1414 (3,800 + 3,950 keys = 7,750 total)</option>
-            <option value="4035|4530|Zombie Nature Dragon (Epic)">Zombie Nature Dragon - E#1187 (4,035 + 4,530 keys = 8,565 total)</option>
-            <option value="6525|7120|Native Dragon (Epic)">Native Dragon - E#1161 (6,525 + 7,120 keys = 13,645 total)</option>
-            <option value="6700|9005|Chichen Itza Dragon (Epic)">Chichen Itza Dragon - E#1179 (6,700 + 9,005 keys = 15,705 total)</option>
-            <option value="10440|14530|Bandaged Dragon (Legendary)">Bandaged Dragon - L#2158 (10,440 + 14,530 keys = 24,970 total)</option>
-            <option value="28900|0|Spring Sniper Dragon (Legendary)">Spring Sniper Dragon - L#2199 (28,900 coins - No Keys)</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Current Coins Held:</label>
-          <input type="number" id="heldCoins" value="0" min="0" oninput="calculateMaze()">
+          <label>Live Output Preview:</label>
+          <div id="msgPreview" style="background: #0d0914; border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 13px; white-space: pre-wrap; color: #a970ff; min-height: 120px;"></div>
         </div>
 
         <div class="result-card">
-          <p>Path Cost: <b id="outPathOnly" style="color:#fff;">0 Coins</b></p>
-          <p style="margin-top:4px;">Keys Cost to Reach: <b id="outKeyCost" style="color:var(--gold);">0 Coins</b></p>
-          <hr style="border-color: var(--border); margin: 8px 0;">
-          <p>Total Cost: <b id="outTotal" style="color:var(--accent);">0 Coins</b></p>
-          <p style="margin-top: 4px;">Coins Still Needed: <b id="outNeeded" style="color:#ff5252;">0 Coins</b></p>
+          <h4>💡 How to run 24/7 Pings (Without keeping tab open):</h4>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.5;">
+            Web browsers block web pages from sending auto-messages when your computer or browser tab is closed.
+            <br><br>
+            To auto-ping 24/7 automatically:
+            <br>1. Copy your Webhook URL above.
+            <br>2. Set up a free <b>Discord Bot Webhook Bot</b> or a free scheduled job on <b>cron-job.org</b> or <b>Github Actions</b>.
+          </p>
         </div>
       </div>
-    </div>
-
-    <!-- COMPLETE BREAKDOWN TABLE -->
-    <h3 style="margin-top: 35px;">📊 Complete Maze Island Path & Key Cost Table</h3>
-    <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px; margin-bottom: 10px;">Full detailed cost per dragon including prerequisite keys required to reach them.</p>
-
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Dragon Name</th>
-            <th>Rarity / ID</th>
-            <th>Direct Path Cost</th>
-            <th>Prerequisites / Key Cost</th>
-            <th>Total Cost</th>
-            <th>F2P Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><b>Luminescent Dragon</b></td>
-            <td>Rare (#64)</td>
-            <td>750 Coins</td>
-            <td>None</td>
-            <td><b style="color: var(--accent);">750 Coins</b></td>
-            <td><span class="badge badge-live">F2P Easy</span></td>
-          </tr>
-          <tr>
-            <td><b>Loki Dragon</b></td>
-            <td>Very Rare (#197)</td>
-            <td>2,585 Coins</td>
-            <td>Luminescent Key (380)</td>
-            <td><b style="color: var(--accent);">2,965 Coins</b></td>
-            <td><span class="badge badge-live">F2P Easy</span></td>
-          </tr>
-          <tr>
-            <td><b>Sad Dragon</b></td>
-            <td>Very Rare (#337)</td>
-            <td>2,605 Coins</td>
-            <td>Loki Key (1,600)</td>
-            <td><b style="color: var(--accent);">4,205 Coins</b></td>
-            <td><span class="badge badge-live">F2P Easy</span></td>
-          </tr>
-          <tr>
-            <td><b>Mountain Ogre Dragon</b></td>
-            <td>Epic (#1414)</td>
-            <td>3,800 Coins</td>
-            <td>Sad Key (3,950)</td>
-            <td><b style="color: var(--accent);">7,750 Coins</b></td>
-            <td><span class="badge badge-live">F2P Achievable</span></td>
-          </tr>
-          <tr>
-            <td><b>Zombie Nature Dragon</b></td>
-            <td>Epic (#1187)</td>
-            <td>4,035 Coins</td>
-            <td>Mountain Ogre Key (4,530)</td>
-            <td><b style="color: var(--accent);">8,565 Coins</b></td>
-            <td><span class="badge badge-live">F2P Achievable</span></td>
-          </tr>
-          <tr>
-            <td><b>Native Dragon</b></td>
-            <td>Epic (#1161)</td>
-            <td>6,525 Coins</td>
-            <td>Zombie Nature Key (7,120)</td>
-            <td><b style="color: var(--accent);">13,645 Coins</b></td>
-            <td><span class="badge badge-live">F2P Achievable</span></td>
-          </tr>
-          <tr>
-            <td><b>Chichen Itza Dragon</b></td>
-            <td>Epic (#1179)</td>
-            <td>6,700 Coins</td>
-            <td>Native Key (9,005)</td>
-            <td><b style="color: var(--accent);">15,705 Coins</b></td>
-            <td><span class="badge badge-live">F2P Achievable</span></td>
-          </tr>
-          <tr>
-            <td><b>Bandaged Dragon</b></td>
-            <td>Legendary (#2158)</td>
-            <td>10,440 Coins</td>
-            <td>Chichen Itza Key (14,530)</td>
-            <td><b style="color: #ff9800;">24,970 Coins</b></td>
-            <td><span class="badge badge-skip">Requires Boosters</span></td>
-          </tr>
-          <tr>
-            <td><b>Spring Sniper Dragon</b></td>
-            <td>Legendary (#2199)</td>
-            <td>28,900 Coins</td>
-            <td>Direct Path (No Keys)</td>
-            <td><b style="color: #f44336;">28,900 Coins</b></td>
-            <td><span class="badge badge-skip">P2W / Offer Coins</span></td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </section>
 
-  <!-- TAB 3: FOOD CALCULATOR -->
-  <section id="foodCalc" class="tab-content">
-    <h2>🍖 Dragon Food Calculator</h2>
-    <div style="max-width: 500px; margin-top: 20px;">
-      <div class="tool-box">
-        <div class="form-group">
-          <label>Starting Level:</label>
-          <input type="number" id="startLevel" value="1" min="1" max="69" oninput="calculateFood()">
-        </div>
-        <div class="form-group">
-          <label>Target Level (Max Level: 70):</label>
-          <input type="number" id="targetLevel" value="70" min="2" max="70" oninput="calculateFood()">
-        </div>
-        <button style="width:100%; padding: 10px; background: var(--accent); border:none; border-radius: 8px; color:#fff; font-weight:bold; cursor:pointer;" onclick="calculateFood()">Calculate Food Cost</button>
-        <div id="foodResultBox" class="result-card" style="margin-top:15px;">
-          <p>Total Food Required: <b id="totalFoodVal" style="color:var(--accent);">112,760,000 Food (112.76M)</b></p>
-          <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Level 1 → 70 requires 112.76M food in total.</p>
-        </div>
+  <!-- TAB 3: EVENTS & MYTHIC RACE GUIDE -->
+  <section id="events" class="tab-content">
+    <h2>🎉 Live Events & Mythic Race Guide</h2>
+    
+    <div class="info-banner" style="margin-top: 15px;">
+      <div class="info-stat">Current Special Event: <b>Mythic Marathon / Race</b></div>
+      <div class="info-stat">Event Duration: <b>11 Days (264 Hours)</b></div>
+      <div class="info-stat">Status: <b style="color:var(--gold);">Live Now</b></div>
+    </div>
+
+    <!-- MAZE ISLAND SUMMARY -->
+    <div class="tool-box" style="margin-bottom: 25px;">
+      <h3>🗺️ Maze Island Event Summary</h3>
+      <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Duration: <b>11 Days</b> | Total Free Coins: <b>22,700 Coins</b></p>
+      
+      <div class="table-wrapper" style="margin-top: 10px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Dragon Name</th>
+              <th>Rarity</th>
+              <th>Total Cost</th>
+              <th>F2P Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><b>Luminescent Dragon</b></td><td>Rare</td><td>750 Coins</td><td><span class="badge badge-live">F2P Easy</span></td></tr>
+            <tr><td><b>Loki Dragon</b></td><td>Very Rare</td><td>2,965 Coins</td><td><span class="badge badge-live">F2P Easy</span></td></tr>
+            <tr><td><b>Sad Dragon</b></td><td>Very Rare</td><td>4,205 Coins</td><td><span class="badge badge-live">F2P Easy</span></td></tr>
+            <tr><td><b>Mountain Ogre Dragon</b></td><td>Epic</td><td>7,750 Coins</td><td><span class="badge badge-live">F2P Achievable</span></td></tr>
+            <tr><td><b>Bandaged Dragon</b></td><td>Legendary</td><td>24,970 Coins</td><td><span class="badge badge-skip">Requires Boosters</span></td></tr>
+          </tbody>
+        </table>
       </div>
+    </div>
+
+    <!-- MYTHIC / HEROIC RACE GUIDE (DITLEP STYLE) -->
+    <div class="tool-box">
+      <h3>🏁 Mythic Race Complete Guide (Ditlep Style Breakdown)</h3>
+      <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px; margin-bottom: 15px;">
+        Follow pools and cooldown timers to finish laps faster without wasting gems.
+      </p>
+
+      <div class="guide-card">
+        <div class="guide-header">
+          <b style="color: var(--gold); font-size: 16px;">Lap 1 - Warm Up</b>
+          <span class="task-tag">No Pool Cooldowns</span>
+        </div>
+        <p style="font-size: 13px; color: var(--text-muted);">
+          • Node 1: Collect Gold (x4) | Feed Dragons (x3)<br>
+          • Node 2: Hatch Dragons (x3) | Breed Dragons (x2)<br>
+          • Node 3: Win League Battles (x2) | Collect Food (x4)
+        </p>
+      </div>
+
+      <div class="guide-card">
+        <div class="guide-header">
+          <b style="color: var(--gold); font-size: 16px;">Lap 2 to 4 - Early Sprint</b>
+          <span class="task-tag">Cooldown: 20m - 45m</span>
+        </div>
+        <p style="font-size: 13px; color: var(--text-muted);">
+          • <b>Strategy:</b> Breed Terra + Terra for quick item drops.<br>
+          • <b>Food Task:</b> Buy lowest tier 30-second food (30 Gold each) repeatedly.
+        </p>
+      </div>
+
+      <div class="guide-card">
+        <div class="guide-header">
+          <b style="color: var(--gold); font-size: 16px;">Lap 5 (Guaranteed Rewards) & Lap 15 (Main Prize)</b>
+          <span class="task-tag">Pool Cooldowns: 2h - 8h</span>
+        </div>
+        <p style="font-size: 13px; color: var(--text-muted);">
+          • <b>Battle Nodes:</b> Wait for item wait timers (30m - 1h per battle) instead of spending gems.<br>
+          • <b>Pool Tip:</b> When a pool runs empty (e.g. 8/10 items collected), set an alarm for the pool recovery time before collecting the rest!
+        </p>
+      </div>
+
     </div>
   </section>
 
 </main>
 
 <script>
-// Event Data using UTC standard dates (Matches 9:30 PM IST / 16:00 UTC)
 const chestEvents = [
-  { name: "Hatch Chest 🥚", duration: "3 Day", min: "13k minimum", reward: "Food", dateIso: "2026-08-18T16:00:00Z", badge: "badge-live", status: "Active" },
-  { name: "L Breed 🥚", duration: "2 Day", min: "SKIP", reward: "—", dateIso: "2026-08-22T16:00:00Z", badge: "badge-skip", status: "SKIP" },
-  { name: "League Chest 🏆", duration: "2 Day", min: "8k minimum", reward: "Food", dateIso: "2026-08-25T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
-  { name: "Arena Chest ⚔️", duration: "3 Day", min: "10k minimum", reward: "Gems", dateIso: "2026-08-28T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
-  { name: "E Breed 🥚", duration: "3 Day", min: "SKIP", reward: "—", dateIso: "2026-09-01T16:00:00Z", badge: "badge-skip", status: "SKIP" },
-  { name: "Hatch Chest 🥚", duration: "2 Day", min: "8.75k minimum", reward: "Food", dateIso: "2026-09-05T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
-  { name: "Arena Chest ⚔️", duration: "2 Day", min: "7.1k minimum", reward: "Gems", dateIso: "2026-09-08T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
-  { name: "L Breed 🥚", duration: "3 Day", min: "SKIP", reward: "—", dateIso: "2026-09-11T16:00:00Z", badge: "badge-skip", status: "SKIP" }
+  { name: "Hatch Chest 🥚", duration: "3 Days", min: "13k minimum", reward: "Food", dateIso: "2026-08-18T16:00:00Z", badge: "badge-live", status: "Active" },
+  { name: "L Breed 🥚", duration: "2 Days", min: "SKIP", reward: "—", dateIso: "2026-08-22T16:00:00Z", badge: "badge-skip", status: "SKIP" },
+  { name: "League Chest 🏆", duration: "2 Days", min: "8k minimum", reward: "Food", dateIso: "2026-08-25T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
+  { name: "Arena Chest ⚔️", duration: "3 Days", min: "10k minimum", reward: "Gems", dateIso: "2026-08-28T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
+  { name: "E Breed 🥚", duration: "3 Days", min: "SKIP", reward: "—", dateIso: "2026-09-01T16:00:00Z", badge: "badge-skip", status: "SKIP" },
+  { name: "Hatch Chest 🥚", duration: "2 Days", min: "8.75k minimum", reward: "Food", dateIso: "2026-09-05T16:00:00Z", badge: "badge-timed", status: "Upcoming" }
 ];
 
 function formatLocalTime(isoString) {
   const d = new Date(isoString);
-  return d.toLocaleString([], {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
+  return d.toLocaleString([], { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
 function renderLocalSchedule() {
   const tbody = document.getElementById('scheduleTableBody');
   tbody.innerHTML = '';
-
   chestEvents.forEach(evt => {
-    const localTimeStr = formatLocalTime(evt.dateIso);
     const row = document.createElement('tr');
     row.innerHTML = `
       <td><b>${evt.name}</b></td>
       <td>${evt.duration}</td>
-      <td><b style="color: var(--accent);">${localTimeStr}</b></td>
+      <td><b style="color: var(--accent);">${formatLocalTime(evt.dateIso)}</b></td>
       <td>${evt.min}</td>
       <td>${evt.reward}</td>
       <td><span class="badge ${evt.badge}">${evt.status}</span></td>
     `;
     tbody.appendChild(row);
   });
-
   document.getElementById('activeLocalTime').textContent = "Start Time: " + formatLocalTime(chestEvents[0].dateIso);
 }
 
 function updateCountdown() {
   const now = new Date();
-  let nextEvent = null;
-
-  for (let evt of chestEvents) {
-    const eventTime = new Date(evt.dateIso);
-    if (eventTime > now) {
-      nextEvent = evt;
-      break;
-    }
-  }
+  let nextEvent = chestEvents.find(evt => new Date(evt.dateIso) > now);
 
   if (!nextEvent) {
     document.getElementById('nextEventName').textContent = "All scheduled events finished";
     document.getElementById('countdownTimer').textContent = "00d 00h 00m 00s";
-    document.getElementById('nextEventLocalTime').textContent = "";
     return;
   }
 
@@ -431,82 +349,37 @@ function switchTab(evt, tabId) {
   evt.currentTarget.classList.add('active');
 }
 
-function calculateMaze() {
-  const val = document.getElementById('dragonPathSelect').value.split('|');
-  const pathCost = parseInt(val[0]);
-  const keyCost = parseInt(val[1]);
-  const totalCost = pathCost + keyCost;
-  
-  const held = parseInt(document.getElementById('heldCoins').value) || 0;
-  const remaining = Math.max(0, totalCost - held);
+// DEFAULT PING MESSAGE LOGIC
+const defaultTemplate = `**[The {EVENT_NAME}]** Begins Now\n\nDuration: {DURATION}\nMin pts: {MIN_PTS}\nReward: {REWARD}`;
 
-  document.getElementById('outPathOnly').textContent = pathCost.toLocaleString() + " Coins";
-  document.getElementById('outKeyCost').textContent = keyCost > 0 ? keyCost.toLocaleString() + " Coins" : "No Keys Needed";
-  document.getElementById('outTotal').textContent = totalCost.toLocaleString() + " Coins";
-  document.getElementById('outNeeded').textContent = remaining.toLocaleString() + " Coins";
+function loadPresetMessage() {
+  document.getElementById('customMessageTemplate').value = defaultTemplate;
+  updateMessagePreview();
 }
 
-const keyLevelMap = { 1: 0, 15: 7480, 20: 22000, 30: 565000, 40: 6280000, 45: 15170000, 50: 30870000, 55: 49880000, 60: 69850000, 70: 112760000 };
-const cumulativeFood = new Array(71).fill(0);
-const milestones = [1, 15, 20, 30, 40, 45, 50, 55, 60, 70];
-
-for (let i = 0; i < milestones.length - 1; i++) {
-  const startLvl = milestones[i];
-  const endLvl = milestones[i + 1];
-  const startFood = keyLevelMap[startLvl];
-  const endFood = keyLevelMap[endLvl];
-
-  for (let lvl = startLvl; lvl <= endLvl; lvl++) {
-    const progress = (lvl - startLvl) / (endLvl - startLvl);
-    cumulativeFood[lvl] = Math.round(startFood + progress * (endFood - startFood));
-  }
-}
-
-function calculateFood() {
-  let start = parseInt(document.getElementById('startLevel').value) || 1;
-  let target = parseInt(document.getElementById('targetLevel').value) || 70;
-
-  if (start < 1) start = 1;
-  if (target > 70) target = 70;
-  if (start >= target) {
-    document.getElementById('totalFoodVal').textContent = "0 Food";
-    return;
-  }
-
-  const totalFood = cumulativeFood[target] - cumulativeFood[start];
-  let formatted = totalFood.toLocaleString() + " Food";
-  if (totalFood >= 1000000) formatted += ` (${(totalFood / 1000000).toFixed(2)}M)`;
-  else if (totalFood >= 1000) formatted += ` (${(totalFood / 1000).toFixed(1)}K)`;
-
-  document.getElementById('totalFoodVal').textContent = formatted;
-  document.getElementById('foodResultBox').style.display = 'block';
-}
-
-function generateMessage() {
-  const selectedData = document.getElementById('pingChestSelect').value.split('|');
-  const tag = document.getElementById('pingTag').value.trim();
-  const status = document.getElementById('pingStatus').value.trim();
-
-  const name = selectedData[0];
-  const duration = selectedData[1];
-  const minPts = selectedData[2];
-  const reward = selectedData[3];
-
-  const tagLine = tag ? tag + "\n" : "";
-  return `${tagLine}**[The ${name}]** ${status}\n\nDuration: ${duration}\nMin pts: ${minPts}\nReward: ${reward}`;
+function resetDefaultMessage() {
+  loadPresetMessage();
 }
 
 function updateMessagePreview() {
-  document.getElementById('msgPreview').textContent = generateMessage();
+  const selectedData = document.getElementById('pingChestSelect').value.split('|');
+  const tag = document.getElementById('pingTag').value.trim();
+  let template = document.getElementById('customMessageTemplate').value;
+
+  template = template.replace('{EVENT_NAME}', selectedData[0]);
+  template = template.replace('{DURATION}', selectedData[1]);
+  template = template.replace('{MIN_PTS}', selectedData[2]);
+  template = template.replace('{REWARD}', selectedData[3]);
+
+  const finalOutput = (tag ? tag + "\n" : "") + template;
+  document.getElementById('msgPreview').textContent = finalOutput;
 }
 
 function sendDiscordPing() {
   const url = document.getElementById('webhookUrl').value.trim();
-  if (!url) {
-    alert("Please enter a valid Discord Webhook URL.");
-    return;
-  }
-  const messageText = generateMessage();
+  if (!url) { alert("Please enter a valid Discord Webhook URL."); return; }
+
+  const messageText = document.getElementById('msgPreview').textContent;
   fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -514,75 +387,14 @@ function sendDiscordPing() {
   })
   .then(res => {
     if (res.ok) alert("Discord ping sent successfully!");
-    else alert("Failed to send message. Please check your Webhook URL.");
-  })
-  .catch(err => alert("Error sending request: " + err));
-}
-
-let autoTimer = null;
-let triggeredEvents = {};
-
-function toggleAutoScheduler() {
-  const btn = document.getElementById('autoBtn');
-  const status = document.getElementById('autoStatus');
-  const url = document.getElementById('webhookUrl').value.trim();
-
-  if (!autoTimer) {
-    if (!url) {
-      alert("Please enter a Webhook URL before starting the scheduler.");
-      return;
-    }
-    autoTimer = setInterval(checkAndAutoPing, 30000);
-    btn.textContent = "🛑 Stop Auto Scheduler";
-    btn.style.background = "#c62828";
-    status.textContent = "🟢 Auto Scheduler Active: Monitoring start times and pings automatically when event starts!";
-    checkAndAutoPing();
-  } else {
-    clearInterval(autoTimer);
-    autoTimer = null;
-    btn.textContent = "⏰ Start Auto Scheduler (Keep Tab Open)";
-    btn.style.background = "#2e7d32";
-    status.textContent = "🔴 Auto Scheduler stopped.";
-  }
-}
-
-function checkAndAutoPing() {
-  const url = document.getElementById('webhookUrl').value.trim();
-  const select = document.getElementById('pingChestSelect');
-  const now = new Date();
-
-  for (let option of select.options) {
-    const parts = option.value.split('|');
-    const name = parts[0];
-    const duration = parts[1];
-    const minPts = parts[2];
-    const reward = parts[3];
-    const startTime = new Date(parts[4]);
-
-    // Check if event start is within 5 minutes or passed less than 5 minutes ago
-    if (Math.abs(now - startTime) <= 300000 && !triggeredEvents[name]) {
-      triggeredEvents[name] = true;
-      const tag = document.getElementById('pingTag').value.trim();
-      const tagLine = tag ? tag + "\n" : "";
-      const autoMsg = `${tagLine}**[The ${name}]** Begins Now\n\nDuration: ${duration}\nMin pts: ${minPts}\nReward: ${reward}`;
-
-      fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: autoMsg })
-      });
-      
-      document.getElementById('autoStatus').textContent = `✅ Auto ping sent for ${name} at ${now.toLocaleTimeString()}!`;
-    }
-  }
+    else alert("Failed to send message. Check Webhook URL.");
+  });
 }
 
 renderLocalSchedule();
 updateCountdown();
 setInterval(updateCountdown, 1000);
-calculateMaze();
-calculateFood();
-updateMessagePreview();
+loadPresetMessage();
 </script>
 
 </body>
