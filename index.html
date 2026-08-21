@@ -1,3 +1,4 @@
+
 <file name="index.html">
 <!DOCTYPE html>
 <html lang="en">
@@ -35,12 +36,12 @@
   .tab-content.active { display: block; }
 
   .info-banner { background: #1a122c; border: 1px solid var(--accent); border-radius: 12px; padding: 15px 20px; margin-bottom: 25px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center; }
-  .info-stat { font-size: 14px; } .info-stat b { color: var(--gold); font-size: 16px; }
+  .info-stat { font-size: 14px; display: flex; align-items: center; gap: 8px; } .info-stat b { color: var(--gold); font-size: 16px; }
 
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-top: 20px; }
   .tool-box { background: var(--card-bg); border: 1px solid var(--border); padding: 20px; border-radius: 16px; position: relative; }
   
-  .countdown-box { background: linear-gradient(135deg, #1c1233 0%, #0d0914 100%); border: 1px solid var(--accent); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 25px; }
+  .countdown-box { background: linear-gradient(135deg, #1c1233 0%, #0d0914 100%); border: 1px solid var(--accent); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 25px; position: relative; overflow: hidden; }
   .countdown-timer { font-size: 28px; font-weight: 800; color: var(--gold); margin: 8px 0; font-family: monospace; }
 
   .form-group { margin-bottom: 15px; }
@@ -57,17 +58,22 @@
   .badge-live { background: #4caf50; color: #fff; }
   .badge-timed { background: #ff9800; color: #fff; }
   .badge-skip { background: #f44336; color: #fff; }
+
+  .color-pill { display: inline-flex; align-items: center; gap: 6px; font-weight: bold; font-size: 12px; }
+  .color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+
   .result-card { background: #0d0914; border-left: 4px solid var(--accent); padding: 12px; margin-top: 15px; border-radius: 4px; }
 
   .btn-discord { width: 100%; padding: 12px; background: var(--discord-color); border: none; border-radius: 8px; color: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
   .btn-discord:hover { background: #4752c4; }
-  .btn-auto { background: #2e7d32; }
-  .btn-auto:hover { background: #1b5e20; }
   .btn-reset { background: #44335c; color: #fff; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; margin-top: 5px; }
 
   .guide-card { background: #120b22; border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 15px; }
   .guide-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; }
   .task-tag { background: #25143a; color: var(--accent); font-size: 11px; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--accent); }
+
+  .section-title { display: flex; align-items: center; gap: 10px; font-size: 20px; }
+  .section-title img, .section-title span.icon { font-size: 22px; }
 </style>
 </head>
 <body>
@@ -104,11 +110,13 @@
 
   <!-- TAB 1: ALLIANCE CHESTS -->
   <section id="chests" class="tab-content active">
-    <h2>🏆 Alliance Chest Schedule</h2>
+    <h2 class="section-title">🏆 Alliance Chest Schedule</h2>
 
     <div class="countdown-box" style="margin-top: 15px;">
-      <h4 style="color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">⏳ Next Chest Event Countdown</h4>
-      <div id="nextEventName" style="font-weight: bold; font-size: 18px; margin-top: 4px; color: #fff;">Calculating...</div>
+      <h4 style="color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">⏳ NEXT CHEST EVENT COUNTDOWN</h4>
+      <div id="nextEventName" style="font-weight: bold; font-size: 20px; margin-top: 4px; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <span>🥚</span> Hatch Chest (3 Days)
+      </div>
       <div class="countdown-timer" id="countdownTimer">00d 00h 00m 00s</div>
       <div id="nextEventLocalTime" style="font-size: 13px; color: var(--accent);">Starts in your local time: Loading...</div>
     </div>
@@ -121,17 +129,17 @@
         <p id="activeLocalTime" style="font-size: 12px; color: var(--gold); margin-top: 2px;"></p>
         <div class="result-card" style="margin-top: 15px;">
           <p>Minimum Required: <b style="color:var(--gold);">13k points</b></p>
-          <p style="margin-top:4px;">Reward: <b style="color:var(--accent);">Food</b></p>
+          <p style="margin-top:4px;">Reward: <b style="color:var(--accent);">Food 🍗</b></p>
         </div>
       </div>
     </div>
 
-    <h3 style="margin-top: 30px;">📅 Full Chest Schedule (Your Local Start Times)</h3>
+    <h3 style="margin-top: 30px;" class="section-title">📅 Full Chest Schedule (Your Local Start Times)</h3>
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
-            <th>Event Type</th>
+            <th>Chest Event</th>
             <th>Duration</th>
             <th>Start Time (Local)</th>
             <th>Minimum Target</th>
@@ -146,7 +154,7 @@
 
   <!-- TAB 2: DISCORD PINGER -->
   <section id="pinger" class="tab-content">
-    <h2>🔔 Custom Discord Text Pinger</h2>
+    <h2 class="section-title">🔔 Custom Discord Text Pinger</h2>
     
     <div class="grid" style="grid-template-columns: 1fr 1fr;">
       <div class="tool-box">
@@ -155,11 +163,11 @@
         <div class="form-group" style="margin-top: 15px;">
           <label>1. Select Chest Event Preset:</label>
           <select id="pingChestSelect" onchange="loadPresetMessage()">
-            <option value="Hatch Chest 🥚|3 Days|13k|Food">Hatch Chest 🥚 (3 Days) — 13k Min (Food)</option>
-            <option value="League Chest 🏆|2 Days|8k|Food">League Chest 🏆 (2 Days) — 8k Min (Food)</option>
-            <option value="Arena Chest ⚔️|3 Days|10k|Gems" selected>Arena Chest ⚔️ (3 Days) — 10k Min (Gems)</option>
-            <option value="Hatch Chest 🥚|2 Days|8.75k|Food">Hatch Chest 🥚 (2 Days) — 8.75k Min (Food)</option>
-            <option value="Arena Chest ⚔️|2 Days|7.1k|Gems">Arena Chest ⚔️ (2 Days) — 7.1k Min (Gems)</option>
+            <option value="Hatch Chest 🥚|3 Days|13k|Food 🍗">Hatch Chest 🥚 (3 Days) — 13k Min (Food)</option>
+            <option value="League Chest 🏆|2 Days|8k|Food 🍗">League Chest 🏆 (2 Days) — 8k Min (Food)</option>
+            <option value="Arena Chest ⚔️|3 Days|10k|Gems 💎" selected>Arena Chest ⚔️ (3 Days) — 10k Min (Gems)</option>
+            <option value="Hatch Chest 🥚|2 Days|8.75k|Food 🍗">Hatch Chest 🥚 (2 Days) — 8.75k Min (Food)</option>
+            <option value="Arena Chest ⚔️|2 Days|7.1k|Gems 💎">Arena Chest ⚔️ (2 Days) — 7.1k Min (Gems)</option>
           </select>
         </div>
 
@@ -193,11 +201,7 @@
         <div class="result-card">
           <h4>💡 How to run 24/7 Pings (Without keeping tab open):</h4>
           <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.5;">
-            Web browsers block web pages from sending auto-messages when your computer or browser tab is closed.
-            <br><br>
-            To auto-ping 24/7 automatically:
-            <br>1. Copy your Webhook URL above.
-            <br>2. Set up a free <b>Discord Bot Webhook Bot</b> or a free scheduled job on <b>cron-job.org</b> or <b>Github Actions</b>.
+            Use <b>cron-job.org</b> to automate your Discord webhook pings online 24/7.
           </p>
         </div>
       </div>
@@ -206,17 +210,17 @@
 
   <!-- TAB 3: EVENTS & MYTHIC RACE GUIDE -->
   <section id="events" class="tab-content">
-    <h2>🎉 Live Events & Mythic Race Guide</h2>
+    <h2 class="section-title">🎉 Live Events & Mythic Race Guide</h2>
     
     <div class="info-banner" style="margin-top: 15px;">
-      <div class="info-stat">Current Special Event: <b>Mythic Marathon / Race</b></div>
-      <div class="info-stat">Event Duration: <b>11 Days (264 Hours)</b></div>
+      <div class="info-stat">🏁 Special Event: <b>Mythic Marathon / Race</b></div>
+      <div class="info-stat">⏳ Event Duration: <b>11 Days (264 Hours)</b></div>
       <div class="info-stat">Status: <b style="color:var(--gold);">Live Now</b></div>
     </div>
 
     <!-- MAZE ISLAND SUMMARY -->
     <div class="tool-box" style="margin-bottom: 25px;">
-      <h3>🗺️ Maze Island Event Summary</h3>
+      <h3 class="section-title">🗺️ Maze Island Event Summary & Color Paths</h3>
       <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Duration: <b>11 Days</b> | Total Free Coins: <b>22,700 Coins</b></p>
       
       <div class="table-wrapper" style="margin-top: 10px;">
@@ -224,25 +228,62 @@
           <thead>
             <tr>
               <th>Dragon Name</th>
+              <th>Path Color</th>
               <th>Rarity</th>
               <th>Total Cost</th>
               <th>F2P Status</th>
+              <th>Owned Alternative</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td><b>Luminescent Dragon</b></td><td>Rare</td><td>750 Coins</td><td><span class="badge badge-live">F2P Easy</span></td></tr>
-            <tr><td><b>Loki Dragon</b></td><td>Very Rare</td><td>2,965 Coins</td><td><span class="badge badge-live">F2P Easy</span></td></tr>
-            <tr><td><b>Sad Dragon</b></td><td>Very Rare</td><td>4,205 Coins</td><td><span class="badge badge-live">F2P Easy</span></td></tr>
-            <tr><td><b>Mountain Ogre Dragon</b></td><td>Epic</td><td>7,750 Coins</td><td><span class="badge badge-live">F2P Achievable</span></td></tr>
-            <tr><td><b>Bandaged Dragon</b></td><td>Legendary</td><td>24,970 Coins</td><td><span class="badge badge-skip">Requires Boosters</span></td></tr>
+            <tr>
+              <td><b>Luminescent Dragon</b></td>
+              <td><span class="color-pill"><span class="color-dot" style="background:#00e676;"></span> Green</span></td>
+              <td>Rare</td>
+              <td>750 Coins</td>
+              <td><span class="badge badge-live">F2P Easy</span></td>
+              <td>Primary Dragon</td>
+            </tr>
+            <tr>
+              <td><b>Loki Dragon</b></td>
+              <td><span class="color-pill"><span class="color-dot" style="background:#29b6f6;"></span> Blue</span></td>
+              <td>Very Rare</td>
+              <td>2,965 Coins</td>
+              <td><span class="badge badge-live">F2P Easy</span></td>
+              <td>2x VR Orbs + Gems</td>
+            </tr>
+            <tr>
+              <td><b>Sad Dragon</b></td>
+              <td><span class="color-pill"><span class="color-dot" style="background:#ab47bc;"></span> Purple</span></td>
+              <td>Very Rare</td>
+              <td>4,205 Coins</td>
+              <td><span class="badge badge-live">F2P Easy</span></td>
+              <td>Very Rare Orbs</td>
+            </tr>
+            <tr>
+              <td><b>Mountain Ogre Dragon</b></td>
+              <td><span class="color-pill"><span class="color-dot" style="background:#ffa726;"></span> Orange</span></td>
+              <td>Epic</td>
+              <td>7,750 Coins</td>
+              <td><span class="badge badge-live">F2P Achievable</span></td>
+              <td>Epic Orbs Path</td>
+            </tr>
+            <tr>
+              <td><b>Bandaged Dragon</b></td>
+              <td><span class="color-pill"><span class="color-dot" style="background:#ef5350;"></span> Red</span></td>
+              <td>Legendary</td>
+              <td>24,970 Coins</td>
+              <td><span class="badge badge-skip">Requires Boosters</span></td>
+              <td>L Orbs + Gems</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- MYTHIC / HEROIC RACE GUIDE (DITLEP STYLE) -->
+    <!-- MYTHIC / HEROIC RACE GUIDE -->
     <div class="tool-box">
-      <h3>🏁 Mythic Race Complete Guide (Ditlep Style Breakdown)</h3>
+      <h3 class="section-title">🏁 Mythic Race Complete Guide (Ditlep Style)</h3>
       <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px; margin-bottom: 15px;">
         Follow pools and cooldown timers to finish laps faster without wasting gems.
       </p>
@@ -288,12 +329,12 @@
 
 <script>
 const chestEvents = [
-  { name: "Hatch Chest 🥚", duration: "3 Days", min: "13k minimum", reward: "Food", dateIso: "2026-08-18T16:00:00Z", badge: "badge-live", status: "Active" },
-  { name: "L Breed 🥚", duration: "2 Days", min: "SKIP", reward: "—", dateIso: "2026-08-22T16:00:00Z", badge: "badge-skip", status: "SKIP" },
-  { name: "League Chest 🏆", duration: "2 Days", min: "8k minimum", reward: "Food", dateIso: "2026-08-25T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
-  { name: "Arena Chest ⚔️", duration: "3 Days", min: "10k minimum", reward: "Gems", dateIso: "2026-08-28T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
-  { name: "E Breed 🥚", duration: "3 Days", min: "SKIP", reward: "—", dateIso: "2026-09-01T16:00:00Z", badge: "badge-skip", status: "SKIP" },
-  { name: "Hatch Chest 🥚", duration: "2 Days", min: "8.75k minimum", reward: "Food", dateIso: "2026-09-05T16:00:00Z", badge: "badge-timed", status: "Upcoming" }
+  { name: "🥚 Hatch Chest", duration: "3 Days", min: "13k minimum", reward: "Food 🍗", dateIso: "2026-08-18T16:00:00Z", badge: "badge-live", status: "Active" },
+  { name: "🥚 L Breed", duration: "2 Days", min: "SKIP", reward: "—", dateIso: "2026-08-22T16:00:00Z", badge: "badge-skip", status: "SKIP" },
+  { name: "🏆 League Chest", duration: "2 Days", min: "8k minimum", reward: "Food 🍗", dateIso: "2026-08-25T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
+  { name: "⚔️ Arena Chest", duration: "3 Days", min: "10k minimum", reward: "Gems 💎", dateIso: "2026-08-28T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
+  { name: "🥚 E Breed", duration: "3 Days", min: "SKIP", reward: "—", dateIso: "2026-09-01T16:00:00Z", badge: "badge-skip", status: "SKIP" },
+  { name: "🥚 Hatch Chest", duration: "2 Days", min: "8.75k minimum", reward: "Food 🍗", dateIso: "2026-09-05T16:00:00Z", badge: "badge-timed", status: "Upcoming" }
 ];
 
 function formatLocalTime(isoString) {
@@ -329,7 +370,7 @@ function updateCountdown() {
     return;
   }
 
-  document.getElementById('nextEventName').textContent = nextEvent.name + " (" + nextEvent.duration + ")";
+  document.getElementById('nextEventName').innerHTML = nextEvent.name + " (" + nextEvent.duration + ")";
   document.getElementById('nextEventLocalTime').textContent = "Exact Local Start: " + formatLocalTime(nextEvent.dateIso);
 
   const diff = new Date(nextEvent.dateIso) - now;
@@ -349,8 +390,7 @@ function switchTab(evt, tabId) {
   evt.currentTarget.classList.add('active');
 }
 
-// DEFAULT PING MESSAGE LOGIC
-const defaultTemplate = `**[The {EVENT_NAME}]** Begins Now\n\nDuration: {DURATION}\nMin pts: {MIN_PTS}\nReward: {REWARD}`;
+const defaultTemplate = `**[{EVENT_NAME}]** Begins Now\n\nDuration: {DURATION}\nMin pts: {MIN_PTS}\nReward: {REWARD}`;
 
 function loadPresetMessage() {
   document.getElementById('customMessageTemplate').value = defaultTemplate;
