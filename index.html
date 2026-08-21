@@ -1,442 +1,427 @@
-
-<file name="index.html">
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Fool's Abode - Alliance & Event Hub</title>
-<style>
-  :root {
-    --bg-dark: #0b0715;
-    --card-bg: #151020;
-    --border: #2c213d;
-    --accent: #a970ff;
-    --accent-hover: #8151b9;
-    --text-muted: #bcb4c9;
-    --gold: #ffc107;
-    --discord-color: #5865F2;
-  }
-  
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-  body { background: var(--bg-dark); color: #fff; padding-bottom: 50px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Fool's Abode</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #c084fc;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: #334155;
+            
+            /* Path Colors */
+            --c-red: #ef4444;
+            --c-brown: #78350f;
+            --c-purple: #a855f7;
+            --c-orange: #f97316;
+            --c-blue: #3b82f6;
+            --c-yellow: #eab308;
+        }
 
-  header { padding: 18px 7%; display: flex; justify-content: space-between; align-items: center; background: #120c20; border-bottom: 1px solid #33234d; position: sticky; top: 0; z-index: 100; }
-  .logo-header-group { display: flex; align-items: center; gap: 12px; }
-  .alliance-logo-img { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; background: #030b1e; }
-  .logo-container { display: flex; flex-direction: column; }
-  .logo { font-size: 22px; font-weight: 800; } .logo span { color: var(--accent); }
-  .author-credit { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: -2px; }
-  
-  nav button { background: none; border: none; color: #ddd; font-size: 14px; cursor: pointer; padding: 8px 14px; border-radius: 8px; transition: 0.2s; }
-  nav button.active, nav button:hover { background: #25143a; color: var(--accent); font-weight: bold; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
 
-  .container { padding: 30px 5%; max-width: 1400px; margin: auto; }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-  .info-banner { background: #1a122c; border: 1px solid var(--accent); border-radius: 12px; padding: 15px 20px; margin-bottom: 25px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center; }
-  .info-stat { font-size: 14px; display: flex; align-items: center; gap: 8px; } .info-stat b { color: var(--gold); font-size: 16px; }
+        /* Branding Styling */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+        }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-top: 20px; }
-  .tool-box { background: var(--card-bg); border: 1px solid var(--border); padding: 20px; border-radius: 16px; position: relative; }
-  
-  .countdown-box { background: linear-gradient(135deg, #1c1233 0%, #0d0914 100%); border: 1px solid var(--accent); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 25px; position: relative; overflow: hidden; }
-  .countdown-timer { font-size: 28px; font-weight: 800; color: var(--gold); margin: 8px 0; font-family: monospace; }
+        .brand-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
 
-  .form-group { margin-bottom: 15px; }
-  label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 14px; }
-  input, select, textarea { width: 100%; padding: 10px 12px; border-radius: 8px; background: #0d0914; color: #fff; border: 1px solid var(--border); outline: none; font-size: 14px; }
-  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+        .site-logo {
+            font-size: 3.5rem;
+            line-height: 1;
+        }
 
-  .table-wrapper { overflow-x: auto; background: #0d0914; border-radius: 12px; border: 1px solid var(--border); margin-top: 15px; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-  th, td { padding: 12px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; }
-  th { background: #170f2b; color: var(--accent); font-weight: bold; }
-  
-  .badge { font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; display: inline-block; }
-  .badge-live { background: #4caf50; color: #fff; }
-  .badge-timed { background: #ff9800; color: #fff; }
-  .badge-skip { background: #f44336; color: #fff; }
+        h1.site-title {
+            color: var(--accent-blue);
+            font-size: 2.8rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-  .color-pill { display: inline-flex; align-items: center; gap: 6px; font-weight: bold; font-size: 12px; }
-  .color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+        .creator-tag {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
 
-  .result-card { background: #0d0914; border-left: 4px solid var(--accent); padding: 12px; margin-top: 15px; border-radius: 4px; }
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
 
-  .btn-discord { width: 100%; padding: 12px; background: var(--discord-color); border: none; border-radius: 8px; color: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
-  .btn-discord:hover { background: #4752c4; }
-  .btn-reset { background: #44335c; color: #fff; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; margin-top: 5px; }
+        .tab-btn {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 2px solid var(--border-color);
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-  .guide-card { background: #120b22; border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 15px; }
-  .guide-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; }
-  .task-tag { background: #25143a; color: var(--accent); font-size: 11px; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--accent); }
+        .tab-btn:hover, .tab-btn.active {
+            border-color: var(--accent-blue);
+            background-color: #334155;
+            color: var(--accent-blue);
+        }
 
-  .section-title { display: flex; align-items: center; gap: 10px; font-size: 20px; }
-  .section-title img, .section-title span.icon { font-size: 22px; }
-</style>
+        .header-icon {
+            font-size: 2.2rem;
+            line-height: 1;
+        }
+
+        .tab-content {
+            display: none;
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--accent-purple);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .info-card {
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .info-card h3 {
+            margin-top: 0;
+            color: var(--accent-blue);
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .legend-item {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: #0f172a;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #1e293b;
+            color: var(--accent-blue);
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #0f172a;
+            color: var(--text-main);
+            font-size: 1rem;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        .tip-box {
+            background-color: rgba(56, 189, 248, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            padding: 12px 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <div class="logo-header-group">
-    <svg class="alliance-logo-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#00d2ff"/>
-          <stop offset="50%" stop-color="#003b6d"/>
-          <stop offset="100%" stop-color="#030b1e"/>
-        </radialGradient>
-      </defs>
-      <circle cx="50" cy="50" r="50" fill="url(#bgGlow)"/>
-      <path d="M 25 55 C 20 25, 60 15, 78 35 C 60 25, 30 35, 32 60 C 33 72, 50 80, 65 75 C 40 85, 20 70, 25 55 Z" fill="#00e5ff" opacity="0.9"/>
-      <path d="M 40 45 C 35 20, 65 20, 82 40 C 68 32, 45 40, 48 58 C 43 52, 38 50, 40 45 Z" fill="#ffffff" opacity="0.95"/>
-      <circle cx="72" cy="38" r="4" fill="#ffffff"/>
-      <circle cx="28" cy="62" r="2.5" fill="#00e5ff"/>
-    </svg>
-    <div class="logo-container">
-      <div class="logo">The Fool's <span>Abode</span></div>
-      <div class="author-credit">Created by silentxsenpai</div>
-    </div>
-  </div>
-  <nav>
-    <button class="nav-btn active" onclick="switchTab(event, 'chests')">🏆 Alliance Chests</button>
-    <button class="nav-btn" onclick="switchTab(event, 'pinger')">🔔 Custom Discord Pinger</button>
-    <button class="nav-btn" onclick="switchTab(event, 'events')">🎉 Live Events & Race Guide</button>
-  </nav>
-</header>
+<div class="container">
+    <!-- Branding Header -->
+    <header>
+        <div class="brand-header">
+            <span class="site-logo">🃏</span>
+            <h1 class="site-title">The Fool's Abode</h1>
+        </div>
+        <div class="creator-tag">Created by The Fool</div>
+    </header>
 
-<main class="container">
-
-  <!-- TAB 1: ALLIANCE CHESTS -->
-  <section id="chests" class="tab-content active">
-    <h2 class="section-title">🏆 Alliance Chest Schedule</h2>
-
-    <div class="countdown-box" style="margin-top: 15px;">
-      <h4 style="color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">⏳ NEXT CHEST EVENT COUNTDOWN</h4>
-      <div id="nextEventName" style="font-weight: bold; font-size: 20px; margin-top: 4px; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px;">
-        <span>🥚</span> Hatch Chest (3 Days)
-      </div>
-      <div class="countdown-timer" id="countdownTimer">00d 00h 00m 00s</div>
-      <div id="nextEventLocalTime" style="font-size: 13px; color: var(--accent);">Starts in your local time: Loading...</div>
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('maze')">
+            <span class="header-icon">🌀</span>
+            <span>Maze Island</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('race')">
+            <span class="header-icon">🏆</span>
+            <span>Heroic Race</span>
+        </button>
     </div>
 
-    <div class="grid">
-      <div class="tool-box">
-        <span class="badge badge-live" style="float: right;">Active</span>
-        <h3>🥚 Hatching Chest</h3>
-        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Duration: 3 Days</p>
-        <p id="activeLocalTime" style="font-size: 12px; color: var(--gold); margin-top: 2px;"></p>
-        <div class="result-card" style="margin-top: 15px;">
-          <p>Minimum Required: <b style="color:var(--gold);">13k points</b></p>
-          <p style="margin-top:4px;">Reward: <b style="color:var(--accent);">Food 🍗</b></p>
-        </div>
-      </div>
-    </div>
-
-    <h3 style="margin-top: 30px;" class="section-title">📅 Full Chest Schedule (Your Local Start Times)</h3>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Chest Event</th>
-            <th>Duration</th>
-            <th>Start Time (Local)</th>
-            <th>Minimum Target</th>
-            <th>Reward</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="scheduleTableBody"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- TAB 2: DISCORD PINGER -->
-  <section id="pinger" class="tab-content">
-    <h2 class="section-title">🔔 Custom Discord Text Pinger</h2>
-    
-    <div class="grid" style="grid-template-columns: 1fr 1fr;">
-      <div class="tool-box">
-        <h3>Ping Configuration</h3>
-        
-        <div class="form-group" style="margin-top: 15px;">
-          <label>1. Select Chest Event Preset:</label>
-          <select id="pingChestSelect" onchange="loadPresetMessage()">
-            <option value="Hatch Chest 🥚|3 Days|13k|Food 🍗">Hatch Chest 🥚 (3 Days) — 13k Min (Food)</option>
-            <option value="League Chest 🏆|2 Days|8k|Food 🍗">League Chest 🏆 (2 Days) — 8k Min (Food)</option>
-            <option value="Arena Chest ⚔️|3 Days|10k|Gems 💎" selected>Arena Chest ⚔️ (3 Days) — 10k Min (Gems)</option>
-            <option value="Hatch Chest 🥚|2 Days|8.75k|Food 🍗">Hatch Chest 🥚 (2 Days) — 8.75k Min (Food)</option>
-            <option value="Arena Chest ⚔️|2 Days|7.1k|Gems 💎">Arena Chest ⚔️ (2 Days) — 7.1k Min (Gems)</option>
-          </select>
+    <!-- MAZE ISLAND SECTION -->
+    <div id="maze" class="tab-content active">
+        <div class="section-header">
+            <span class="header-icon">🌀</span>
+            <h2>Maze Island</h2>
         </div>
 
-        <div class="form-group">
-          <label>2. Role Tag / Ping (Empty by default):</label>
-          <input type="text" id="pingTag" value="" placeholder="e.g. <@&ROLE_ID>" oninput="updateMessagePreview()">
+        <div class="grid-container">
+            <div class="info-card">
+                <h3>Currency Overview</h3>
+                <p><strong>Start Bonus:</strong> 700 coins</p>
+                <p><strong>Collections:</strong> 2,000 coins daily (22,000 total)</p>
+                <p><strong>Free Currency Total:</strong> 22,700 coins</p>
+                <small>*Excludes extra coins from video ads or bonus events.</small>
+            </div>
+
+            <div class="info-card">
+                <h3>A/B Testing Notice</h3>
+                <p>Path layouts and costs are bound to <strong>Path Colors</strong>, not individual dragons. Follow the path color breakdown for exact costs and special reward locations.</p>
+            </div>
         </div>
 
-        <div class="form-group">
-          <label>3. Edit Message Format (Fully Customizable):</label>
-          <textarea id="customMessageTemplate" rows="5" oninput="updateMessagePreview()"></textarea>
-          <button class="btn-reset" onclick="resetDefaultMessage()">Reset to Default Template</button>
+        <h3>Path Color Legend</h3>
+        <div class="legend-grid">
+            <div class="legend-item" style="background-color: var(--c-red);">Firecracker</div>
+            <div class="legend-item" style="background-color: var(--c-brown);">Eternal Helmet</div>
+            <div class="legend-item" style="background-color: var(--c-purple);">Hollow Tickets</div>
+            <div class="legend-item" style="background-color: var(--c-orange);">Pineapple Chest</div>
+            <div class="legend-item" style="background-color: var(--c-blue);">L Treasure Key</div>
+            <div class="legend-item" style="background-color: var(--c-yellow); color: #000; text-shadow: none;">M Treasure Key</div>
         </div>
 
-        <div class="form-group">
-          <label>4. Discord Webhook URL:</label>
-          <input type="text" id="webhookUrl" placeholder="https://discord.com/api/webhooks/...">
-        </div>
-
-        <button class="btn-discord" onclick="sendDiscordPing()">🚀 Send Ping Now</button>
-      </div>
-
-      <div class="tool-box">
-        <h3>Live Preview & 24/7 Setup</h3>
-        
-        <div class="form-group" style="margin-top: 15px;">
-          <label>Live Output Preview:</label>
-          <div id="msgPreview" style="background: #0d0914; border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 13px; white-space: pre-wrap; color: #a970ff; min-height: 120px;"></div>
-        </div>
-
-        <div class="result-card">
-          <h4>💡 How to run 24/7 Pings (Without keeping tab open):</h4>
-          <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.5;">
-            Use <b>cron-job.org</b> to automate your Discord webhook pings online 24/7.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TAB 3: EVENTS & MYTHIC RACE GUIDE -->
-  <section id="events" class="tab-content">
-    <h2 class="section-title">🎉 Live Events & Mythic Race Guide</h2>
-    
-    <div class="info-banner" style="margin-top: 15px;">
-      <div class="info-stat">🏁 Special Event: <b>Mythic Marathon / Race</b></div>
-      <div class="info-stat">⏳ Event Duration: <b>11 Days (264 Hours)</b></div>
-      <div class="info-stat">Status: <b style="color:var(--gold);">Live Now</b></div>
-    </div>
-
-    <!-- MAZE ISLAND SUMMARY -->
-    <div class="tool-box" style="margin-bottom: 25px;">
-      <h3 class="section-title">🗺️ Maze Island Event Summary & Color Paths</h3>
-      <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Duration: <b>11 Days</b> | Total Free Coins: <b>22,700 Coins</b></p>
-      
-      <div class="table-wrapper" style="margin-top: 10px;">
+        <h3 style="margin-top:30px;">Main Dragon Paths</h3>
         <table>
-          <thead>
-            <tr>
-              <th>Dragon Name</th>
-              <th>Path Color</th>
-              <th>Rarity</th>
-              <th>Total Cost</th>
-              <th>F2P Status</th>
-              <th>Owned Alternative</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>Luminescent Dragon</b></td>
-              <td><span class="color-pill"><span class="color-dot" style="background:#00e676;"></span> Green</span></td>
-              <td>Rare</td>
-              <td>750 Coins</td>
-              <td><span class="badge badge-live">F2P Easy</span></td>
-              <td>Primary Dragon</td>
-            </tr>
-            <tr>
-              <td><b>Loki Dragon</b></td>
-              <td><span class="color-pill"><span class="color-dot" style="background:#29b6f6;"></span> Blue</span></td>
-              <td>Very Rare</td>
-              <td>2,965 Coins</td>
-              <td><span class="badge badge-live">F2P Easy</span></td>
-              <td>2x VR Orbs + Gems</td>
-            </tr>
-            <tr>
-              <td><b>Sad Dragon</b></td>
-              <td><span class="color-pill"><span class="color-dot" style="background:#ab47bc;"></span> Purple</span></td>
-              <td>Very Rare</td>
-              <td>4,205 Coins</td>
-              <td><span class="badge badge-live">F2P Easy</span></td>
-              <td>Very Rare Orbs</td>
-            </tr>
-            <tr>
-              <td><b>Mountain Ogre Dragon</b></td>
-              <td><span class="color-pill"><span class="color-dot" style="background:#ffa726;"></span> Orange</span></td>
-              <td>Epic</td>
-              <td>7,750 Coins</td>
-              <td><span class="badge badge-live">F2P Achievable</span></td>
-              <td>Epic Orbs Path</td>
-            </tr>
-            <tr>
-              <td><b>Bandaged Dragon</b></td>
-              <td><span class="color-pill"><span class="color-dot" style="background:#ef5350;"></span> Red</span></td>
-              <td>Legendary</td>
-              <td>24,970 Coins</td>
-              <td><span class="badge badge-skip">Requires Boosters</span></td>
-              <td>L Orbs + Gems</td>
-            </tr>
-          </tbody>
+            <thead>
+                <tr>
+                    <th>Dragon</th>
+                    <th>Rarity</th>
+                    <th>Path Cost</th>
+                    <th>Keys Needed</th>
+                    <th>Total Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Spring Sniper (#2199)</td><td>L</td><td>28,900</td><td>0</td><td>28,900</td></tr>
+                <tr><td>Luminescent (#64)</td><td>R</td><td>750</td><td>0</td><td>750</td></tr>
+                <tr><td>Loki (#197)</td><td>VR</td><td>2,585</td><td>1 Key</td><td>2,965</td></tr>
+                <tr><td>Sad (#337)</td><td>VR</td><td>2,605</td><td>2 Keys</td><td>4,955</td></tr>
+                <tr><td>Mountain Ogre (#1414)</td><td>E</td><td>3,800</td><td>3 Keys</td><td>7,750</td></tr>
+                <tr><td>Zombie Nature (#1187)</td><td>E</td><td>4,035</td><td>4 Keys</td><td>8,565</td></tr>
+                <tr><td>Native (#1161)</td><td>E</td><td>6,525</td><td>5 Keys</td><td>13,645</td></tr>
+                <tr><td>Chichen Itza (#1179)</td><td>E</td><td>6,700</td><td>6 Keys</td><td>15,705</td></tr>
+                <tr><td>Bandaged (#2158)</td><td>L</td><td>10,440</td><td>7 Keys</td><td>24,970</td></tr>
+            </tbody>
         </table>
-      </div>
+
+        <h3 style="margin-top:30px;">Time-Limited Paths</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Dates</th>
+                    <th>Dragon</th>
+                    <th>Rarity</th>
+                    <th>Path Cost</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Aug 14 - 16</td><td>Dark Angel (#343)</td><td>E</td><td>2,590</td><td>-</td></tr>
+                <tr><td>Aug 17 - 19</td><td>Two-Headed (#134)</td><td>R</td><td>7,850</td><td>-</td></tr>
+                <tr><td>Aug 19 - 21</td><td>Plagued Pal (#2151)</td><td>L</td><td>5,300</td><td>-</td></tr>
+                <tr><td>Aug 22 - 23</td><td>Abracadabra (#1871)</td><td>L</td><td>21,400</td><td>Contains Redemption Doom Dragon</td></tr>
+                <tr><td>Aug 23 - 24</td><td>Estival (#1857)</td><td>L</td><td>9,895</td><td>-</td></tr>
+            </tbody>
+        </table>
     </div>
 
-    <!-- MYTHIC / HEROIC RACE GUIDE -->
-    <div class="tool-box">
-      <h3 class="section-title">🏁 Mythic Race Complete Guide (Ditlep Style)</h3>
-      <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px; margin-bottom: 15px;">
-        Follow pools and cooldown timers to finish laps faster without wasting gems.
-      </p>
-
-      <div class="guide-card">
-        <div class="guide-header">
-          <b style="color: var(--gold); font-size: 16px;">Lap 1 - Warm Up</b>
-          <span class="task-tag">No Pool Cooldowns</span>
+    <!-- SEPARATE HEROIC RACE SECTION -->
+    <div id="race" class="tab-content">
+        <div class="section-header">
+            <span class="header-icon">🏆</span>
+            <h2>Heroic Race: Gel Barrier Dragon</h2>
         </div>
-        <p style="font-size: 13px; color: var(--text-muted);">
-          • Node 1: Collect Gold (x4) | Feed Dragons (x3)<br>
-          • Node 2: Hatch Dragons (x3) | Breed Dragons (x2)<br>
-          • Node 3: Win League Battles (x2) | Collect Food (x4)
-        </p>
-      </div>
 
-      <div class="guide-card">
-        <div class="guide-header">
-          <b style="color: var(--gold); font-size: 16px;">Lap 2 to 4 - Early Sprint</b>
-          <span class="task-tag">Cooldown: 20m - 45m</span>
+        <input type="text" id="lapSearch" class="search-box" placeholder="🔍 Search by lap or task (e.g., 'Lap 25', 'Breed Dragons')..." onkeyup="filterRaceData()">
+
+        <div class="tip-box">
+            <strong>Tips & Optimization Tactics:</strong>
+            <ul>
+                <li><strong>Breed/Hatch Spam:</strong> Pair Terra + Terra dragons repeatedly for rapid item drops.</li>
+                <li><strong>30-Second Crops:</strong> Harvest 30-second Blueberries continuously to complete "Collect Food" pools quickly.</li>
+                <li><strong>Low Level Feeding:</strong> Keep Level 1 basic dragons stored in vault/habitats to fulfill "Feed Dragons" using minimal food.</li>
+            </ul>
         </div>
-        <p style="font-size: 13px; color: var(--text-muted);">
-          • <b>Strategy:</b> Breed Terra + Terra for quick item drops.<br>
-          • <b>Food Task:</b> Buy lowest tier 30-second food (30 Gold each) repeatedly.
-        </p>
-      </div>
 
-      <div class="guide-card">
-        <div class="guide-header">
-          <b style="color: var(--gold); font-size: 16px;">Lap 5 (Guaranteed Rewards) & Lap 15 (Main Prize)</b>
-          <span class="task-tag">Pool Cooldowns: 2h - 8h</span>
-        </div>
-        <p style="font-size: 13px; color: var(--text-muted);">
-          • <b>Battle Nodes:</b> Wait for item wait timers (30m - 1h per battle) instead of spending gems.<br>
-          • <b>Pool Tip:</b> When a pool runs empty (e.g. 8/10 items collected), set an alarm for the pool recovery time before collecting the rest!
-        </p>
-      </div>
-
+        <h3 style="margin-top:25px;">Lap Node Breakdown</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Lap</th>
+                    <th>Node</th>
+                    <th>Tasks & Item Requirements</th>
+                    <th>Pool / Wait Time</th>
+                    <th>Total Node Wait</th>
+                </tr>
+            </thead>
+            <tbody id="raceTableBody">
+                <!-- Javascript populated -->
+            </tbody>
+        </table>
     </div>
-  </section>
-
-</main>
+</div>
 
 <script>
-const chestEvents = [
-  { name: "🥚 Hatch Chest", duration: "3 Days", min: "13k minimum", reward: "Food 🍗", dateIso: "2026-08-18T16:00:00Z", badge: "badge-live", status: "Active" },
-  { name: "🥚 L Breed", duration: "2 Days", min: "SKIP", reward: "—", dateIso: "2026-08-22T16:00:00Z", badge: "badge-skip", status: "SKIP" },
-  { name: "🏆 League Chest", duration: "2 Days", min: "8k minimum", reward: "Food 🍗", dateIso: "2026-08-25T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
-  { name: "⚔️ Arena Chest", duration: "3 Days", min: "10k minimum", reward: "Gems 💎", dateIso: "2026-08-28T16:00:00Z", badge: "badge-timed", status: "Upcoming" },
-  { name: "🥚 E Breed", duration: "3 Days", min: "SKIP", reward: "—", dateIso: "2026-09-01T16:00:00Z", badge: "badge-skip", status: "SKIP" },
-  { name: "🥚 Hatch Chest", duration: "2 Days", min: "8.75k minimum", reward: "Food 🍗", dateIso: "2026-09-05T16:00:00Z", badge: "badge-timed", status: "Upcoming" }
-];
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
 
-function formatLocalTime(isoString) {
-  const d = new Date(isoString);
-  return d.toLocaleString([], { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-}
+    const raceData = [
+        { lap: 23, node: 1, task: "Feed Dragons: 136", pool: "-", wait: "-" },
+        { lap: 23, node: 2, task: "Collect Food: 45 / League Fights: 7", pool: "40", wait: "1h 40m" },
+        { lap: 23, node: 3, task: "Feed Dragons: 139", pool: "104", wait: "3h 30m" },
+        { lap: 23, node: 4, task: "Collect Gold: 80 / Battle Dragons: 10", pool: "48", wait: "18h 40m" },
+        { lap: 23, node: 5, task: "Breed Dragons: 10 / Collect Food: 46", pool: "6 / 29", wait: "13h 36m" },
 
-function renderLocalSchedule() {
-  const tbody = document.getElementById('scheduleTableBody');
-  tbody.innerHTML = '';
-  chestEvents.forEach(evt => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td><b>${evt.name}</b></td>
-      <td>${evt.duration}</td>
-      <td><b style="color: var(--accent);">${formatLocalTime(evt.dateIso)}</b></td>
-      <td>${evt.min}</td>
-      <td>${evt.reward}</td>
-      <td><span class="badge ${evt.badge}">${evt.status}</span></td>
-    `;
-    tbody.appendChild(row);
-  });
-  document.getElementById('activeLocalTime').textContent = "Start Time: " + formatLocalTime(chestEvents[0].dateIso);
-}
+        { lap: 24, node: 1, task: "Feed Dragons: 143", pool: "-", wait: "-" },
+        { lap: 24, node: 2, task: "Collect Gold: 83 / Collect Food: 47", pool: "62 / 35", wait: "1h 48m" },
+        { lap: 24, node: 3, task: "League Fights: 8 / Feed Dragons: 74", pool: "47", wait: "3h 36m" },
+        { lap: 24, node: 4, task: "Breed Dragons: 11 / Battle Dragons: 9", pool: "6", wait: "17h 20m" },
+        { lap: 24, node: 5, task: "Hatch Eggs: 10 / Collect Gold: 86", pool: "5 / 43", wait: "13h 37m" },
 
-function updateCountdown() {
-  const now = new Date();
-  let nextEvent = chestEvents.find(evt => new Date(evt.dateIso) > now);
+        { lap: 25, node: 1, task: "Collect Gold: 177", pool: "-", wait: "-" },
+        { lap: 25, node: 2, task: "Feed Dragons: 75 / Breed Dragons: 11", pool: "56 / 8", wait: "1h 54m" },
+        { lap: 25, node: 3, task: "League Fights: 8 / Hatch Eggs: 10", pool: "5", wait: "3h 20m" },
+        { lap: 25, node: 4, task: "Collect Food: 48 / Battle Dragons: 9", pool: "24", wait: "17h 20m" },
+        { lap: 25, node: 5, task: "Feed Dragons: 77 / Hatch Eggs: 11", pool: "39 / 6", wait: "13h 56m" },
 
-  if (!nextEvent) {
-    document.getElementById('nextEventName').textContent = "All scheduled events finished";
-    document.getElementById('countdownTimer').textContent = "00d 00h 00m 00s";
-    return;
-  }
+        { lap: 26, node: 1, task: "Collect Food: 49 / Feed Dragons: 79", pool: "-", wait: "-" },
+        { lap: 26, node: 2, task: "Collect Gold: 182", pool: "160", wait: "1h 50m" },
+        { lap: 26, node: 3, task: "Feed Dragons: 81 / Battle Dragons: 9", pool: "61", wait: "17h 20m" },
+        { lap: 26, node: 4, task: "Collect Food: 50 / Breed Dragons: 12", pool: "30 / 7", wait: "6h 40m" },
+        { lap: 26, node: 5, task: "Hatch Eggs: 11 / Feed Dragons: 83", pool: "7 / 52", wait: "13h 26m" },
 
-  document.getElementById('nextEventName').innerHTML = nextEvent.name + " (" + nextEvent.duration + ")";
-  document.getElementById('nextEventLocalTime').textContent = "Exact Local Start: " + formatLocalTime(nextEvent.dateIso);
+        { lap: 27, node: 1, task: "Feed Dragons: 85 / Collect Food: 52", pool: "-", wait: "-" },
+        { lap: 27, node: 2, task: "Breed Dragons: 24", pool: "21", wait: "1h 42m" },
+        { lap: 27, node: 3, task: "League Fights: 8 / Collect Gold: 94", pool: "71", wait: "3h 27m" },
+        { lap: 27, node: 4, task: "Battle Dragons: 9 / Feed Dragons: 87", pool: "52", wait: "17h 20m" },
+        { lap: 27, node: 5, task: "Hatch Eggs: 11 / Collect Food: 53", pool: "6 / 27", wait: "13h 26m" },
 
-  const diff = new Date(nextEvent.dateIso) - now;
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((diff / 1000 / 60) % 60);
-  const seconds = Math.floor((diff / 1000) % 60);
+        { lap: 28, node: 1, task: "Collect Gold: 194", pool: "-", wait: "-" },
+        { lap: 28, node: 2, task: "Collect Food: 107", pool: "94", wait: "1h 44m" },
+        { lap: 28, node: 3, task: "League Fights: 8 / Hatch Eggs: 12", pool: "9", wait: "3h 21m" },
+        { lap: 28, node: 4, task: "Feed Dragons: 89 / Battle Dragons: 9", pool: "53", wait: "17h 20m" },
+        { lap: 28, node: 5, task: "Breed Dragons: 12 / Collect Gold: 100", pool: "6 / 50", wait: "13h 24m" },
 
-  document.getElementById('countdownTimer').textContent = 
-    `${String(days).padStart(2, '0')}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
-}
+        { lap: 29, node: 1, task: "Collect Gold: 103 / Hatch Eggs: 12", pool: "-", wait: "-" },
+        { lap: 29, node: 2, task: "Feed Dragons: 90 / League Fights: 9", pool: "79", wait: "1h 50m" },
+        { lap: 29, node: 3, task: "Collect Food: 55 / Breed Dragons: 13", pool: "41 / 10", wait: "3h 21m" },
+        { lap: 29, node: 4, task: "Hatch Eggs: 12 / Feed Dragons: 92", pool: "7 / 55", wait: "6h 47m" },
+        { lap: 29, node: 5, task: "Battle Dragons: 15 / Collect Food: 56", pool: "17", wait: "1d 8h" }
+    ];
 
-function switchTab(evt, tabId) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
-  evt.currentTarget.classList.add('active');
-}
+    function renderRaceData(data) {
+        const tbody = document.getElementById('raceTableBody');
+        tbody.innerHTML = '';
+        data.forEach(item => {
+            const row = `<tr>
+                <td><strong>Lap ${item.lap}</strong></td>
+                <td>Node ${item.node}</td>
+                <td>${item.task}</td>
+                <td>${item.pool}</td>
+                <td>${item.wait}</td>
+            </tr>`;
+            tbody.innerHTML += row;
+        });
+    }
 
-const defaultTemplate = `**[{EVENT_NAME}]** Begins Now\n\nDuration: {DURATION}\nMin pts: {MIN_PTS}\nReward: {REWARD}`;
+    function filterRaceData() {
+        const query = document.getElementById('lapSearch').value.toLowerCase();
+        const filtered = raceData.filter(item => 
+            `lap ${item.lap}`.includes(query) || 
+            item.task.toLowerCase().includes(query)
+        );
+        renderRaceData(filtered);
+    }
 
-function loadPresetMessage() {
-  document.getElementById('customMessageTemplate').value = defaultTemplate;
-  updateMessagePreview();
-}
-
-function resetDefaultMessage() {
-  loadPresetMessage();
-}
-
-function updateMessagePreview() {
-  const selectedData = document.getElementById('pingChestSelect').value.split('|');
-  const tag = document.getElementById('pingTag').value.trim();
-  let template = document.getElementById('customMessageTemplate').value;
-
-  template = template.replace('{EVENT_NAME}', selectedData[0]);
-  template = template.replace('{DURATION}', selectedData[1]);
-  template = template.replace('{MIN_PTS}', selectedData[2]);
-  template = template.replace('{REWARD}', selectedData[3]);
-
-  const finalOutput = (tag ? tag + "\n" : "") + template;
-  document.getElementById('msgPreview').textContent = finalOutput;
-}
-
-function sendDiscordPing() {
-  const url = document.getElementById('webhookUrl').value.trim();
-  if (!url) { alert("Please enter a valid Discord Webhook URL."); return; }
-
-  const messageText = document.getElementById('msgPreview').textContent;
-  fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content: messageText })
-  })
-  .then(res => {
-    if (res.ok) alert("Discord ping sent successfully!");
-    else alert("Failed to send message. Check Webhook URL.");
-  });
-}
-
-renderLocalSchedule();
-updateCountdown();
-setInterval(updateCountdown, 1000);
-loadPresetMessage();
+    renderRaceData(raceData);
 </script>
 
 </body>
 </html>
-</file>
